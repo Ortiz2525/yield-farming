@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts\YieldFarming.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> YieldFarming.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">97.92% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>47/48</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>8/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">85.71% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>6/7</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">97.92% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>47/48</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+&nbsp;
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "hardhat/console.sol";
+&nbsp;
+contract YieldFarming is Ownable {
+    IERC20 public stakingToken;
+    IERC20 public rewardToken1;
+    IERC20 public rewardToken2;
+    uint256 public depositFee;
+    uint256 public treasuryFee;
+    uint256 public totalStaked;
+    uint256 public lockPeriod = 30 days;
+    uint256 public reward1PerBlock;
+    uint256 public reward2PerBlock;
+    uint256 public totalProfit;
+    mapping(address =&gt; uint256) public stakedBalances;
+    mapping(address =&gt; uint256) public lastRewardBlockNumbers;
+    mapping(address =&gt; uint256[]) private depositTimestamps;
+    mapping(address =&gt; uint256[]) private depositAmounts;
+    address public treasury;
+&nbsp;
+    event Deposit(address indexed user, uint256 amount);
+    event Withdraw(address indexed user, uint256 amount);
+    event Claim(address indexed user, uint256 amount);
+&nbsp;
+    constructor(
+        IERC20 _stakingToken,
+        IERC20 _rewardToken1,
+        IERC20 _rewardToken2,
+        uint256 _depositFee,
+        uint256 _treasuryFee,
+        address _treasury,
+        uint256 _reward1PerBlock,
+        uint256 _reward2PerBlock
+    ) {
+        stakingToken = _stakingToken;
+        rewardToken1 = _rewardToken1;
+        rewardToken2 = _rewardToken2;
+        depositFee = _depositFee;
+        treasuryFee = _treasuryFee;
+        treasury = _treasury;
+        reward1PerBlock = _reward1PerBlock;
+        reward2PerBlock = _reward2PerBlock;
+        totalProfit = 0;
+    }
+&nbsp;
+    function pendingReward(address user) public view returns (uint256, uint256) {
+        uint256 blockNumber = block.number;
+        uint256 rewardAmount1 = (stakedBalances[user] * (blockNumber - lastRewardBlockNumbers[user]) * reward1PerBlock) / 1e18;
+        uint256 rewardAmount2 = (stakedBalances[user] * (blockNumber - lastRewardBlockNumbers[user]) * reward2PerBlock) / 1e18;
+        return (rewardAmount1, rewardAmount2);
+    }
+&nbsp;
+    function getLockedAmount(address staker) public view returns (uint256) {
+        uint256 lockedAmount = 0;
+        for (uint256 i = 0; i &lt; depositTimestamps[staker].length; i++) {
+            uint256 elapsedTime = block.timestamp - depositTimestamps[staker][i];
+            if (elapsedTime &lt; lockPeriod)
+                lockedAmount += depositAmounts[staker][i];
+        }
+        return lockedAmount;
+    }
+&nbsp;
+    function deposit(uint256 amount) public {
+        require(amount &gt; 0, "Amount must be greater than 0");
+        uint256 fee = (amount * depositFee) / 100;
+        uint256 netAmount = amount - fee;
+        stakingToken.transferFrom(msg.sender, address(this), amount);
+        
+        stakingToken.transfer(treasury, fee);
+        stakedBalances[msg.sender] += netAmount;
+        depositTimestamps[msg.sender].push(block.timestamp);
+        depositAmounts[msg.sender].push(netAmount);
+        totalStaked += netAmount;
+        console.log(totalStaked);
+        emit Deposit(msg.sender, amount);
+    }
+&nbsp;
+    function withdraw(uint256 amount) public {
+        require(amount &gt; 0, "Amount must be greater than 0");
+        uint256 withdrawalAmount=stakedBalances[msg.sender]-getLockedAmount(msg.sender);
+        require(amount &lt;= withdrawalAmount, "Amount must be less than or equal to withdrawal Amount");
+        (uint256 reward1, uint256 reward2) = pendingReward(msg.sender);
+        
+        stakedBalances[msg.sender] -= amount;
+        lastRewardBlockNumbers[msg.sender] = block.timestamp;
+        totalStaked -= amount;
+        stakingToken.transfer(msg.sender, amount);
+        rewardToken1.transfer(msg.sender, reward1);
+        rewardToken2.transfer(msg.sender, reward2);
+        emit Withdraw(msg.sender, amount);
+    }
+&nbsp;
+    function claim() public {
+        (uint256 reward1, uint256 reward2) = pendingReward(msg.sender);
+        console.log(reward1, reward2);
+        lastRewardBlockNumbers[msg.sender] = block.timestamp;
+        rewardToken1.transfer(msg.sender, reward1);
+        rewardToken2.transfer(msg.sender, reward2);
+        emit Claim(msg.sender, reward1 + reward2);
+    }
+<span class="fstat-no" title="function not covered" >     function setTotalProfit(uint256 income) public onlyOwner {</span>
+<span class="cstat-no" title="statement not covered" >         totalProfit = income</span>;
+     }
+&nbsp;
+    //  function setTreasury(address _treasury) public onlyOwner {
+    //      treasury = _treasury;
+    //  }
+&nbsp;
+    // function setDepositFee(uint256 _depositFee) public onlyOwner {
+    //     depositFee = _depositFee;
+    // }
+&nbsp;
+    // function setTreasuryFee(uint256 _treasuryFee) public onlyOwner {
+    //     treasuryFee = _treasuryFee;
+    // }
+&nbsp;
+    // function setReward1PerBlock(uint256 _reward1PerBlock) public onlyOwner {
+    //     reward1PerBlock = _reward1PerBlock;
+    // }
+&nbsp;
+    // function setReward2PerBlock(uint256 _reward2PerBlock) public onlyOwner {
+    //     reward2PerBlock = _reward2PerBlock;
+    // }
+&nbsp;
+    // function getTreasuryBalance() public view returns (uint256) {
+    //     return stakingToken.balanceOf(treasury);
+    // }
+&nbsp;
+&nbsp;
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jun 08 2023 02:18:54 GMT+1000 (Vladivostok Standard Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

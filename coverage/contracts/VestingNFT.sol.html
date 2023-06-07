@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts\VestingNFT.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> VestingNFT.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>39/39</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>18/18</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>5/5</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>39/39</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">42×</span>
+<span class="cline-any cline-yes">42×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+&nbsp;
+import "../node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "../node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
+&nbsp;
+contract NFTVesting {
+    using SafeMath for uint256;
+&nbsp;
+    IERC721 public nftContract;
+    IERC20 public vestingTokenContract;
+&nbsp;
+    uint256 public constant VESTING_PERIOD = 30 days;
+&nbsp;
+    struct VestingInfo {
+        uint256 startTime;
+        uint256 amount;
+        uint256 claimedAmount;
+    }
+&nbsp;
+    mapping(uint256 =&gt; VestingInfo) public vestingInfo;
+    mapping(uint256 =&gt; mapping(address =&gt; uint256)) public fractionalizedShares;
+    mapping(uint256 =&gt; mapping(address =&gt; uint256))
+        public fractionalizedVestingAmount;
+    mapping(uint256 =&gt; mapping(address =&gt; uint256))
+        public fractionalizedClaimedAmount;
+&nbsp;
+    event Deposit(uint256 indexed tokenId, uint256 amount);
+    event Claim(uint256 indexed tokenId, uint256 amount);
+&nbsp;
+    constructor(address _nftContract, address _vestingTokenContract) {
+        nftContract = IERC721(_nftContract);
+        vestingTokenContract = IERC20(_vestingTokenContract);
+    }
+&nbsp;
+    function deposit(uint256 tokenId, uint256 amount) external {
+        require(nftContract.ownerOf(tokenId) != address(0));
+&nbsp;
+        vestingTokenContract.transferFrom(msg.sender, address(this), amount);
+        vestingInfo[tokenId] = VestingInfo(block.timestamp, amount, 0);
+        
+        emit Deposit(tokenId, amount);
+    }
+&nbsp;
+    function claim(uint256 tokenId) external {
+        require(nftContract.ownerOf(tokenId) == msg.sender, "Not the owner");
+&nbsp;
+        VestingInfo storage info = vestingInfo[tokenId];
+        require(info.startTime != 0, "No vesting info");
+&nbsp;
+        uint256 elapsedTime = block.timestamp.sub(info.startTime);
+        uint256 vestedAmount = (VESTING_PERIOD &lt; elapsedTime)
+            ? info.amount
+            : elapsedTime.mul(info.amount).div(VESTING_PERIOD);
+        uint256 claimableAmount = vestedAmount.sub(info.claimedAmount);
+        require(claimableAmount &gt; 0, "Nothing to claim");
+&nbsp;
+        info.claimedAmount = vestedAmount;
+        vestingTokenContract.transfer(msg.sender, claimableAmount);
+&nbsp;
+        emit Claim(tokenId, claimableAmount);
+    }
+&nbsp;
+    function fractionalizedClaim(uint256 tokenId) external {
+        VestingInfo storage info = vestingInfo[tokenId];
+        require(info.startTime != 0, "No vesting info");
+&nbsp;
+        uint256 share = fractionalizedShares[tokenId][msg.sender];
+        require(share &gt; 0, "No fractionalized share");
+&nbsp;
+        uint256 elapsedTime = block.timestamp.sub(info.startTime);
+        uint256 vestedAmount = (VESTING_PERIOD &lt; elapsedTime)
+            ? fractionalizedVestingAmount[tokenId][msg.sender]
+            : elapsedTime
+                .mul(fractionalizedVestingAmount[tokenId][msg.sender])
+                .div(VESTING_PERIOD);
+        uint256 fractionalizedClaimableAmount = vestedAmount.sub(
+            fractionalizedClaimedAmount[tokenId][msg.sender]
+        );
+        require(fractionalizedClaimableAmount &gt; 0, "Nothing to claim");
+&nbsp;
+        info.claimedAmount = info.claimedAmount.add(
+            fractionalizedClaimableAmount
+        );
+        vestingTokenContract.transfer(
+            msg.sender,
+            fractionalizedClaimableAmount
+        );
+&nbsp;
+        fractionalizedClaimedAmount[tokenId][msg.sender] = vestedAmount;
+        emit Claim(tokenId, fractionalizedClaimableAmount);
+    }
+&nbsp;
+    function onFractionalization(
+        uint256 tokenId,
+        address[] calldata holders,
+        uint256[] calldata shares
+    ) external {
+        VestingInfo storage info = vestingInfo[tokenId];
+        // Ensure the holders and shares arrays have the same length
+        require(
+            holders.length == shares.length,
+            "Holders and shares arrays must have the same length"
+        );
+&nbsp;
+        // Ensure the tokenId exists in the vestingInfo mapping
+        require(
+            vestingInfo[tokenId].startTime != 0,
+            "TokenId not found in vestingInfo"
+        );
+        uint256 vestingAmount = (info.amount).sub(info.claimedAmount);
+        // Clear any existing fractionalizedShares for the tokenId
+        for (uint256 i = 0; i &lt; holders.length; i++) {
+            fractionalizedShares[tokenId][holders[i]] = 0;
+            fractionalizedClaimedAmount[tokenId][holders[i]] = 0;
+            fractionalizedVestingAmount[tokenId][holders[i]] = 0;
+        }
+&nbsp;
+        // Update the fractionalizedShares mapping with the new shares
+        for (uint256 i = 0; i &lt; holders.length; i++) {
+            fractionalizedShares[tokenId][holders[i]] = shares[i];
+            fractionalizedVestingAmount[tokenId][holders[i]] = vestingAmount
+                .mul(shares[i])
+                .div(100);
+        }
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jun 01 2023 13:26:37 GMT+1000 (Vladivostok Standard Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
