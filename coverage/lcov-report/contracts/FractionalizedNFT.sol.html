@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts\FractionalizedNFT.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> FractionalizedNFT.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/13</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/2</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/5</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/15</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: AGPL-3.0-only
+pragma solidity ^0.8.10;
+&nbsp;
+import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+&nbsp;
+/// @notice ERC20 token representing a share of an ERC721
+contract NFTShare is ERC20 {
+	/// @notice Deploys an NFTShare with the specified name and symbol, and mints an initial supply to the specified address
+	/// @param name The name of the deployed token
+	/// @param symbol The symbol of the deployed token
+	/// @param mintSupply The supply this token will have, which be minted to the specified address
+	/// @param mintTo The address the initial supply will get minted to
+	/// @dev Deployed from the split() function of the LilFractional contract
+<span class="fstat-no" title="function not covered" >	constructor(</span>
+		string memory name,
+		string memory symbol,
+		uint256 mintSupply,
+		address mintTo
+	) payable ERC20(name, symbol) {
+<span class="cstat-no" title="statement not covered" >		_mint(mintTo, mintSupply)</span>;
+	}
+&nbsp;
+	/// @notice Burns a specified amount of tokens from a specified user after ensuring the caller has permission to
+	/// @param from The address of the user who should get their tokens burned
+	/// @param amount The amount of tokens that should get burned
+	/// @dev The allowance check happens when substracting the amount from the allowed amount. This operation will underflow (and revert) if the caller doesn't have enough allowance.
+<span class="fstat-no" title="function not covered" >	function burnFrom(address from, uint256 amount) public payable {</span>
+<span class="cstat-no" title="statement not covered" >		uint256 allowed = allowance(from,msg.sender);</span> // Saves gas for limited approvals.
+&nbsp;
+	//	if (allowed != type(uint256).max) _allowances[from][msg.sender] = allowed - amount;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		_burn(from, amount)</span>;
+	}
+}
+&nbsp;
+/// @title lil fractional
+/// @author Miguel Piedrafita
+/// @notice Barebones NFT fractionalisation factory.
+contract LilFractional {
+	/// ERRORS ///
+&nbsp;
+	/// @notice Thrown when trying to rejoin a token from a vault that doesn't exist
+	error VaultNotFound();
+&nbsp;
+	/// @dev Parameters for vaults
+	/// @param nftContract The ERC721 contract for the fractionalized token
+	/// @param tokenId The ID of the fractionalized token
+	/// @param tokenSupply The amount of issued ERC20 tokens for this vault
+	/// @param tokenContract The ERC20 contract for the issued tokens
+	struct Vault {
+		ERC721 nftContract;
+		uint256 tokenId;
+		uint256 tokenSupply;
+		NFTShare tokenContract;
+	}
+&nbsp;
+	/// EVENTS ///
+&nbsp;
+	/// @notice Emitted when a token is fractionalized
+	/// @param vault The details of the created vault
+	event VaultCreated(Vault vault);
+&nbsp;
+	/// @notice Emitted when a token is recovered from a vault
+	/// @param vault The details of the destroyed vault
+	event VaultDestroyed(Vault vault);
+&nbsp;
+	/// @notice Used as a counter for the next vault index.
+	/// @dev Initialised at 1 because it makes the first transaction slightly cheaper.
+	uint256 internal vaultId = 1;
+&nbsp;
+	/// @notice An indexed list of vaults
+	/// @dev This automatically generates a getter for us!
+	mapping(uint256 =&gt; Vault) public getVault;
+&nbsp;
+	/// @notice Fractionalize an ERC721 token
+	/// @param nftContract The ERC721 contract for the token you're fractionalizing
+	/// @param tokenId The ID of the token you're fractionalizing
+	/// @param supply The amount of ERC20 tokens to issue for this token. These will be distributed to the caller
+	/// @param name The name for the resultant ERC20 token
+	/// @param symbol The symbol for the resultant ERC20 token
+	/// @return The ID of the created vault
+	/// @dev Remember to call setApprovalForAll(&lt;address of this contract&gt;, true) on the ERC721's contract before calling this function
+<span class="fstat-no" title="function not covered" >	function split(</span>
+		ERC721 nftContract,
+		uint256 tokenId,
+		uint256 supply,
+		string memory name,
+		string memory symbol
+	) public payable returns (uint256) {
+<span class="cstat-no" title="statement not covered" >		NFTShare tokenContract = new NFTShare(name, symbol, supply, msg.sender);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		Vault memory vault = Vault({</span>
+			nftContract: nftContract,
+			tokenId: tokenId,
+			tokenSupply: supply,
+			tokenContract: tokenContract
+		});
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		emit VaultCreated(vault);</span>
+&nbsp;
+		getVault[vaultId] = vault;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		nftContract.transferFrom(msg.sender, address(this), tokenId)</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		return vaultId++;</span>
+	}
+&nbsp;
+	// @notice Recover a fractionalized ERC721 token
+	// @param vaultId The ID of the vault containing the token
+	// @dev Remember to call approve(&lt;address of this contract&gt;, &lt;supply or greater&gt;) on the ERC20's contract before calling this function
+<span class="fstat-no" title="function not covered" >	function join(uint256 vaultId1) public payable {</span>
+<span class="cstat-no" title="statement not covered" >		Vault memory vault = getVault[vaultId1];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		if (address(vault.tokenContract) == address(0)) revert VaultNotFound();</span>
+&nbsp;
+		delete getVault[vaultId1];
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		vault.tokenContract.burnFrom(msg.sender, vault.tokenSupply)</span>;
+<span class="cstat-no" title="statement not covered" >		vault.nftContract.transferFrom(address(this), msg.sender, vault.tokenId)</span>;
+	}
+&nbsp;
+	/// @dev This function ensures this contract can receive ERC721 tokens
+<span class="fstat-no" title="function not covered" >	function onERC721Received(</span>
+		address,
+		address,
+		uint256,
+		bytes memory
+	) public payable returns (bytes4) {
+<span class="cstat-no" title="statement not covered" >		return this.onERC721Received.selector;</span>
+	}
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat May 27 2023 03:58:55 GMT+1000 (Vladivostok Standard Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
