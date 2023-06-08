@@ -227,17 +227,7 @@
 182
 183
 184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+185</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -307,7 +297,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -325,14 +314,12 @@
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5×</span>
@@ -346,7 +333,6 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
@@ -369,7 +355,6 @@
 <span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-yes">9×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -384,11 +369,9 @@
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -407,7 +390,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -426,8 +408,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -501,7 +481,6 @@ contract FarmingYield is Ownable {
         address _user
     ) public view returns (uint256, uint256) {
         UserInfo storage user = userInfo[_user];
-        //   console.log(user.amount*accReward1PerShare);
         return (
             user.amount.mul(accReward1PerShare).div(1e12).sub(user.reward1Debt),
             user.amount.mul(accReward2PerShare).div(1e12).sub(user.reward2Debt)
@@ -518,7 +497,6 @@ contract FarmingYield is Ownable {
         uint256 multiplier = block.number.sub(lastRewardBlock);
         uint256 Reward1 = multiplier.mul(reward1PerBlock);
         uint256 Reward2 = multiplier.mul(reward2PerBlock);
-        //        sushi.mint(devaddr, sushiReward.div(10));
 &nbsp;
         rewardToken1.mint(address(this), Reward1);
         rewardToken2.mint(address(this), Reward2);
@@ -528,7 +506,6 @@ contract FarmingYield is Ownable {
         accReward2PerShare = accReward2PerShare.add(
             Reward2.mul(1e12).div(StakingSupply)
         );
-        // console.log(accReward1PerShare);
         lastRewardBlock = block.number;
     }
 &nbsp;
@@ -540,7 +517,6 @@ contract FarmingYield is Ownable {
             (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
                 msg.sender
             );
-            //send pending amount
             rewardToken1.transfer(treasury, pendingReward1.mul(10).div(100));
             rewardToken2.transfer(treasury, pendingReward2.mul(10).div(100));
             rewardToken1.transfer(
@@ -563,7 +539,6 @@ contract FarmingYield is Ownable {
         user.reward1Debt = user.amount.mul(accReward1PerShare).div(1e12);
         user.reward2Debt = user.amount.mul(accReward2PerShare).div(1e12);
         lastBlockTimeStamp[msg.sender] = block.timestamp;
-        // console.log(stakingToken.balanceOf(address(this)),user.amount);
         emit Deposit(msg.sender, netAmount);
     }
 &nbsp;
@@ -578,11 +553,9 @@ contract FarmingYield is Ownable {
         (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
             msg.sender
         );
-        //   console.log(pendingReward1, pendingReward2);
-        //   console.log(rewardToken1.balanceOf(address(this)));
-        //send pending amount
         rewardToken1.transfer(treasury, pendingReward1.mul(10).div(100));
         rewardToken2.transfer(treasury, pendingReward2.mul(10).div(100));
+&nbsp;
         rewardToken1.transfer(
             msg.sender,
             pendingReward1.sub(pendingReward1.mul(10).div(100))
@@ -601,7 +574,6 @@ contract FarmingYield is Ownable {
 &nbsp;
     function claim() public {
         UserInfo storage user = userInfo[msg.sender];
-     //   console.log(block.number - lastRewardBlock);
         update();
         (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
             msg.sender
@@ -620,8 +592,6 @@ contract FarmingYield is Ownable {
 &nbsp;
         user.reward1Debt = user.amount.mul(accReward1PerShare).div(1e12);
         user.reward2Debt = user.amount.mul(accReward2PerShare).div(1e12);
-&nbsp;
-      //  console.log(pendingReward1, pendingReward2);
         emit Claim(msg.sender, pendingReward1, pendingReward2);
     }
 }
@@ -631,7 +601,7 @@ contract FarmingYield is Ownable {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jun 09 2023 03:03:36 GMT+1000 (Vladivostok Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jun 09 2023 03:44:09 GMT+1000 (Vladivostok Standard Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

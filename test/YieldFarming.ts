@@ -11,10 +11,10 @@ describe("FarmingYield", () => {
   let owner: Signer;
   let addr1: Signer;
   let addr2: Signer;
-  let addrs: Signer;
+  let treasury: Signer;
 
   beforeEach(async () => {
-    [owner, addr1, addr2, addrs] = await ethers.getSigners();
+    [owner, addr1, addr2, treasury] = await ethers.getSigners();
 
     const ERC20MockFactory = await ethers.getContractFactory("ERC20Mock");
     stakingToken = await ERC20MockFactory.deploy("Staking Token", "STK");
@@ -26,10 +26,10 @@ describe("FarmingYield", () => {
       stakingToken.address,
       rewardToken1.address,
       rewardToken2.address,
-      1, // depositFee
-      await owner.getAddress(), // treasury
-      100, // reward1PerBlock
-      200 // reward2PerBlock
+      1, // depositFeePercent
+      await treasury.getAddress(), // treasury
+      1000, // reward1PerBlock
+      2000 // reward2PerBlock
     );
   });
 
@@ -42,8 +42,6 @@ describe("FarmingYield", () => {
       expect(await FarmingYield.rewardToken1()).to.equal(rewardToken1.address);
       expect(await FarmingYield.rewardToken2()).to.equal(rewardToken2.address);
     });
-
-    // Add more tests for deployment here
   });
 
   describe("Deposit", () => {
@@ -67,24 +65,30 @@ describe("FarmingYield", () => {
     });
     it("get Reward tokens from deposit", async () => {
       // Mint some staking tokens for addr1
-      await stakingToken.connect(owner).mint(await addr1.getAddress(), 1000);
+      await stakingToken.connect(owner).mint(await addr1.getAddress(), 2020);
       // Approve FarmingYield contract to spend addr1's staking tokens
-      await stakingToken.connect(addr1).approve(FarmingYield.address, 1000);
+      await stakingToken.connect(addr1).approve(FarmingYield.address, 2020);
       // Deposit staking tokens
-      await FarmingYield.connect(addr1).deposit(500);
+      await FarmingYield.connect(addr1).deposit(1010);
+      
       await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60]);
       await ethers.provider.send("evm_mine",[]);
-      await FarmingYield.connect(addr1).deposit(500);
+      //2 blocks are minted
+
+      await FarmingYield.connect(addr1).deposit(1010);
       // Check if the deposit was successful
       const userInfo = await FarmingYield.userInfo(await addr1.getAddress());
-      console.log(userInfo);
-    //  expect(userInfo.amount).to.equal(990); // 1000 - 1% deposit fee
+      //console.log(await rewardToken1.balanceOf(await addr1.getAddress()));
+      
+      //amount of rewardtoken1 based on share from staking amount in 90% total reward token.
+      await expect (await rewardToken1.balanceOf(await addr1.getAddress())).to.be.equal(ethers.BigNumber.from("1800")); // ({blockpass = 2}*1000)*90/100
+      
+      //amount of rewardtoken1 in treasure. (10%)
+      await expect (await rewardToken1.balanceOf(await treasury.getAddress())).to.be.equal(ethers.BigNumber.from("200"));
+      expect(userInfo.amount).to.equal(2000); //  2020 - fee
     });
-
-    // Add more tests for deposit here
   });
 
-  // Add more test cases for withdraw, claim, and other functions
 
   describe("Withdraw", () => {
     beforeEach(async () => {
@@ -131,9 +135,9 @@ describe("FarmingYield", () => {
   describe("Claim", () => {
     beforeEach(async () => {
       // Mint some staking tokens for addr1 and deposit them
-      await stakingToken.connect(owner).mint(await addr1.getAddress(), 1000);
-      await stakingToken.connect(addr1).approve(FarmingYield.address, 1000);
-      await FarmingYield.connect(addr1).deposit(1000);
+      await stakingToken.connect(owner).mint(await addr1.getAddress(), 1010);
+      await stakingToken.connect(addr1).approve(FarmingYield.address, 1010);
+      await FarmingYield.connect(addr1).deposit(1010);
     });
   
     it("Should claim pending rewards", async () => {
@@ -157,14 +161,13 @@ describe("FarmingYield", () => {
       await ethers.provider.send("evm_mine", []);
       await ethers.provider.send("evm_mine", []);
       await ethers.provider.send("evm_mine", []);
+      // 4 blocks are minted
         
       // Check if the Claim event is emitted
       await expect(FarmingYield.connect(addr1).claim())
-        .to.emit(FarmingYield, "Claim");
-       // .withArgs(await addr1.getAddress(),);
+        .to.emit(FarmingYield, "Claim")
+       .withArgs(await addr1.getAddress(), 4000, 8000); //blockpass = s4
     });
-   
-    // Add more tests for claim here
   });
 
 });
