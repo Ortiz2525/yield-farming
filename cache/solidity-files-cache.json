@@ -112,41 +112,6 @@
         "IERC20"
       ]
     },
-    "D:\\Work\\Git\\yield-farming\\yield-farming\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
-      "lastModificationDate": 1685719631079,
-      "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
-      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Context"
-      ]
-    },
     "D:\\Work\\Git\\yield-farming\\yield-farming\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Metadata.sol": {
       "lastModificationDate": 1685719633988,
       "contentHash": "909ab67fc5c25033fe6cd364f8c056f9",
@@ -184,10 +149,45 @@
         "IERC20Metadata"
       ]
     },
-    "D:\\Work\\Git\\yield-farming\\yield-farming\\contracts\\Farming.sol": {
-      "lastModificationDate": 1686235563141,
-      "contentHash": "fe053cdaa38840d153924fc3fd7d7ef9",
-      "sourceName": "contracts/Farming.sol",
+    "D:\\Work\\Git\\yield-farming\\yield-farming\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
+      "lastModificationDate": 1685719631079,
+      "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
+      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Context"
+      ]
+    },
+    "D:\\Work\\Git\\yield-farming\\yield-farming\\contracts\\FarmingYield.sol": {
+      "lastModificationDate": 1686236972297,
+      "contentHash": "b941ffb48b0eded0fd07a4b904df432b",
+      "sourceName": "contracts/FarmingYield.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
@@ -222,42 +222,7 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "Farming"
-      ]
-    },
-    "D:\\Work\\Git\\yield-farming\\yield-farming\\node_modules\\hardhat\\console.sol": {
-      "lastModificationDate": 1685719644294,
-      "contentHash": "4ff3cd2f6272c9a6516e9ee4f2b967d3",
-      "sourceName": "hardhat/console.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">= 0.4.22 <0.9.0"
-      ],
-      "artifacts": [
-        "console"
+        "FarmingYield"
       ]
     },
     "D:\\Work\\Git\\yield-farming\\yield-farming\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
@@ -297,6 +262,41 @@
         "Ownable"
       ]
     },
+    "D:\\Work\\Git\\yield-farming\\yield-farming\\node_modules\\hardhat\\console.sol": {
+      "lastModificationDate": 1685719644294,
+      "contentHash": "4ff3cd2f6272c9a6516e9ee4f2b967d3",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">= 0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
     "D:\\Work\\Git\\yield-farming\\yield-farming\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SafeMath.sol": {
       "lastModificationDate": 1685719640342,
       "contentHash": "f6f4fda16c536e57069af40a245c985e",
@@ -330,45 +330,6 @@
       ],
       "artifacts": [
         "SafeMath"
-      ]
-    },
-    "D:\\Work\\Git\\yield-farming\\yield-farming\\contracts\\YieldFarming.sol": {
-      "lastModificationDate": 1686230801739,
-      "contentHash": "f73e71c32842a997b3435294eb95cf91",
-      "sourceName": "contracts/YieldFarming.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "hardhat/console.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "YieldFarming"
       ]
     }
   }

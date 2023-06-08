@@ -12,7 +12,7 @@ contract FarmingYield is Ownable {
     // token addresses
     IERC20 public stakingToken;
     ERC20Mock public rewardToken1;
-    IERC20 public rewardToken2;
+    ERC20Mock public rewardToken2;
 
     // fee percent
     uint256 public depositFee;
@@ -28,11 +28,14 @@ contract FarmingYield is Ownable {
     // depositFee will be send to treasury address.
 
     uint256 public lastRewardBlock;
-    uint256 public accRewardPerShare;
+    uint256 public accReward1PerShare;
+    uint256 public accReward2PerShare;
     address public treasury;
     struct UserInfo {
         uint256 amount; // How many staking tokens the user has provided.
-        uint256 rewardDebt; // Reward debt.
+        // Reward debt.
+        uint256 reward1Debt; 
+        uint256 reward2Debt; 
     }
     
     mapping(address => UserInfo) public userInfo;
@@ -40,12 +43,12 @@ contract FarmingYield is Ownable {
     
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
-    event Claim(address indexed user, uint256 amount);
+    event Claim(address indexed user, uint256 amount1, uint256 amount2);
 
     constructor(
         IERC20 _stakingToken,
         ERC20Mock _rewardToken1,
-        IERC20 _rewardToken2,
+        ERC20Mock _rewardToken2,
         uint256 _depositFee,
         uint256 _treasuryFee,
         address _treasury,
@@ -61,28 +64,29 @@ contract FarmingYield is Ownable {
         reward1PerBlock = _reward1PerBlock;
         reward2PerBlock = _reward2PerBlock;
         lastRewardBlock = block.number;
-        accRewardPerShare = 0;
+        accReward1PerShare = 0;
     }
     // function pendingReward(address _user) public view returns (uint256, uint256) {
     //     uint256 blockNumber = block.number;
     //     UserInfo storage user = userInfo[_user];
-    //     uint256 _accRewardPerShare = accRewardPerShare;
+    //     uint256 _accReward1PerShare = accReward1PerShare;
     //     uint256 StakingSupply = stakingToken.balanceOf(address(this));
 
     //     if (block.number > lastRewardBlock && StakingSupply != 0) 
     //     {
     //         uint256 multiplier = blockNumber.sub(lastRewardBlock);
     //         uint256 Reward1 =multiplier.mul(reward1PerBlock);
-    //         _accRewardPerShare = _accRewardPerShare.add(Reward1.mul(1e12).div(StakingSupply));
+    //         _accReward1PerShare = _accReward1PerShare.add(Reward1.mul(1e12).div(StakingSupply));
     //     }
 
-    //     return (user.amount.mul(_accRewardPerShare).div(1e12).sub(user.rewardDebt),
-    //     user.amount.mul(_accRewardPerShare).div(1e12).sub(user.rewardDebt));
+    //     return (user.amount.mul(_accReward1PerShare).div(1e12).sub(user.rewardDebt),
+    //     user.amount.mul(_accReward1PerShare).div(1e12).sub(user.rewardDebt));
     // }
 
-    function pendingReward(address _user) public view returns (uint256) {
+    function pendingReward(address _user) public view returns (uint256, uint256) {
         UserInfo storage user = userInfo[_user];
-        return user.amount.mul(accRewardPerShare).div(1e12).sub(user.rewardDebt);
+        return (user.amount.mul(accReward1PerShare).div(1e12).sub(user.reward1Debt),
+        user.amount.mul(accReward2PerShare).div(1e12).sub(user.reward2Debt));
     }
 
 
@@ -95,9 +99,12 @@ contract FarmingYield is Ownable {
         }
         uint256 multiplier = block.number.sub(lastRewardBlock);
         uint256 Reward1 = multiplier.mul(reward1PerBlock);
+        uint256 Reward2 = multiplier.mul(reward2PerBlock);
 //        sushi.mint(devaddr, sushiReward.div(10));
         rewardToken1.mint(address(this), Reward1);
-        accRewardPerShare = accRewardPerShare.add(Reward1.mul(1e12).div(StakingSupply));
+        rewardToken2.mint(address(this), Reward2);
+        accReward1PerShare = accReward1PerShare.add(Reward1.mul(1e12).div(StakingSupply));
+        accReward2PerShare = accReward2PerShare.add(Reward2.mul(1e12).div(StakingSupply));
         lastRewardBlock = block.number;
     }
 
@@ -106,9 +113,10 @@ contract FarmingYield is Ownable {
         UserInfo storage user = userInfo[msg.sender];
         update();
         if (user.amount > 0) {
-            uint256 pending = pendingReward(msg.sender);                
+            (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(msg.sender);                
                 //send pending amount
-            rewardToken1.transfer(msg.sender, pending);
+            rewardToken1.transfer(msg.sender, pendingReward1);
+            rewardToken2.transfer(msg.sender, pendingReward2);
         }
         
         uint256 fee = (amount * depositFee) / 100;
@@ -119,7 +127,8 @@ contract FarmingYield is Ownable {
         user.amount = user.amount.add(netAmount);
         // depositTimestamps[msg.sender].push(block.timestamp);
         // depositAmounts[msg.sender].push(netAmount);
-        user.rewardDebt = user.amount.mul(accRewardPerShare).div(1e12);
+        user.reward1Debt = user.amount.mul(accReward1PerShare).div(1e12);
+        user.reward2Debt = user.amount.mul(accReward2PerShare).div(1e12);
         lastBlockTimeStamp[msg.sender]=block.timestamp;
         emit Deposit(msg.sender, netAmount);
     }
@@ -129,12 +138,14 @@ contract FarmingYield is Ownable {
         UserInfo storage user = userInfo[msg.sender];
         require((block.timestamp - lastBlockTimeStamp[msg.sender]) >= 30 days ,"lock_period time");
         update();
-        uint256 pending = pendingReward(msg.sender);       
-            //send pending amount
-        rewardToken1.transfer(msg.sender, pending);
+        (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(msg.sender);                
+                //send pending amount
+            rewardToken1.transfer(msg.sender, pendingReward1);
+            rewardToken2.transfer(msg.sender, pendingReward2);
 
         user.amount = user.amount.sub(amount);
-        user.rewardDebt = user.amount.mul(accRewardPerShare).div(1e12);
+        user.reward1Debt = user.amount.mul(accReward1PerShare).div(1e12);
+        user.reward2Debt = user.amount.mul(accReward2PerShare).div(1e12);
         stakingToken.transfer(msg.sender, amount);
         emit Withdraw(msg.sender, amount);
     }
@@ -142,11 +153,13 @@ contract FarmingYield is Ownable {
     function claim() public {
         UserInfo storage user = userInfo[msg.sender];    
         update();
-        uint256 pending = pendingReward(msg.sender);       
-            //send pending amount
-        rewardToken1.transfer(msg.sender, pending);
+        (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(msg.sender);                
+                //send pending amount
+            rewardToken1.transfer(msg.sender, pendingReward1);
+            rewardToken2.transfer(msg.sender, pendingReward2);
 
-        user.rewardDebt = user.amount.mul(accRewardPerShare).div(1e12);
-        emit Claim(msg.sender, pending);
+        user.reward1Debt = user.amount.mul(accReward1PerShare).div(1e12);
+        user.reward2Debt = user.amount.mul(accReward2PerShare).div(1e12);
+        emit Claim(msg.sender, pendingReward1, pendingReward2);
     }
 }

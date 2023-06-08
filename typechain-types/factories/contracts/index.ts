@@ -2,5 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ERC20Mock__factory } from "./ERC20Mock__factory";
-export { Farming__factory } from "./Farming__factory";
-export { YieldFarming__factory } from "./YieldFarming__factory";
+export { FarmingYield__factory } from "./FarmingYield__factory";

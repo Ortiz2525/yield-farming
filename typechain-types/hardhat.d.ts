@@ -33,13 +33,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20Mock__factory>;
     getContractFactory(
-      name: "Farming",
+      name: "FarmingYield",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Farming__factory>;
-    getContractFactory(
-      name: "YieldFarming",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.YieldFarming__factory>;
+    ): Promise<Contracts.FarmingYield__factory>;
 
     getContractAt(
       name: "Ownable",
@@ -67,15 +63,10 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ERC20Mock>;
     getContractAt(
-      name: "Farming",
+      name: "FarmingYield",
       address: string,
       signer?: ethers.Signer
-    ): Promise<Contracts.Farming>;
-    getContractAt(
-      name: "YieldFarming",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.YieldFarming>;
+    ): Promise<Contracts.FarmingYield>;
 
     // default types
     getContractFactory(

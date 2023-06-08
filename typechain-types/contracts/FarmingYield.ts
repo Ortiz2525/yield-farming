@@ -27,14 +27,15 @@ import type {
   PromiseOrValue,
 } from "../common";
 
-export interface YieldFarmingInterface extends utils.Interface {
+export interface FarmingYieldInterface extends utils.Interface {
   functions: {
+    "accReward1PerShare()": FunctionFragment;
+    "accReward2PerShare()": FunctionFragment;
     "claim()": FunctionFragment;
     "deposit(uint256)": FunctionFragment;
     "depositFee()": FunctionFragment;
-    "distributionProfit(uint256)": FunctionFragment;
-    "getLockedAmount(address)": FunctionFragment;
-    "lastRewardBlockNumbers(address)": FunctionFragment;
+    "lastBlockTimeStamp(address)": FunctionFragment;
+    "lastRewardBlock()": FunctionFragment;
     "lockPeriod()": FunctionFragment;
     "owner()": FunctionFragment;
     "pendingReward(address)": FunctionFragment;
@@ -43,24 +44,25 @@ export interface YieldFarmingInterface extends utils.Interface {
     "reward2PerBlock()": FunctionFragment;
     "rewardToken1()": FunctionFragment;
     "rewardToken2()": FunctionFragment;
-    "stakedBalances(address)": FunctionFragment;
-    "stakingReward()": FunctionFragment;
     "stakingToken()": FunctionFragment;
     "totalStaked()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "treasury()": FunctionFragment;
     "treasuryFee()": FunctionFragment;
+    "update()": FunctionFragment;
+    "userInfo(address)": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "accReward1PerShare"
+      | "accReward2PerShare"
       | "claim"
       | "deposit"
       | "depositFee"
-      | "distributionProfit"
-      | "getLockedAmount"
-      | "lastRewardBlockNumbers"
+      | "lastBlockTimeStamp"
+      | "lastRewardBlock"
       | "lockPeriod"
       | "owner"
       | "pendingReward"
@@ -69,16 +71,24 @@ export interface YieldFarmingInterface extends utils.Interface {
       | "reward2PerBlock"
       | "rewardToken1"
       | "rewardToken2"
-      | "stakedBalances"
-      | "stakingReward"
       | "stakingToken"
       | "totalStaked"
       | "transferOwnership"
       | "treasury"
       | "treasuryFee"
+      | "update"
+      | "userInfo"
       | "withdraw"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "accReward1PerShare",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "accReward2PerShare",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "claim", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "deposit",
@@ -89,16 +99,12 @@ export interface YieldFarmingInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "distributionProfit",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getLockedAmount",
+    functionFragment: "lastBlockTimeStamp",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "lastRewardBlockNumbers",
-    values: [PromiseOrValue<string>]
+    functionFragment: "lastRewardBlock",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "lockPeriod",
@@ -130,14 +136,6 @@ export interface YieldFarmingInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "stakedBalances",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "stakingReward",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "stakingToken",
     values?: undefined
   ): string;
@@ -154,24 +152,33 @@ export interface YieldFarmingInterface extends utils.Interface {
     functionFragment: "treasuryFee",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "update", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "userInfo",
+    values: [PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(
     functionFragment: "withdraw",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "accReward1PerShare",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "accReward2PerShare",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "depositFee", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "distributionProfit",
+    functionFragment: "lastBlockTimeStamp",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getLockedAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastRewardBlockNumbers",
+    functionFragment: "lastRewardBlock",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "lockPeriod", data: BytesLike): Result;
@@ -201,14 +208,6 @@ export interface YieldFarmingInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "stakedBalances",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "stakingReward",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "stakingToken",
     data: BytesLike
   ): Result;
@@ -225,10 +224,12 @@ export interface YieldFarmingInterface extends utils.Interface {
     functionFragment: "treasuryFee",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "update", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "userInfo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
-    "Claim(address,uint256)": EventFragment;
+    "Claim(address,uint256,uint256)": EventFragment;
     "Deposit(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Withdraw(address,uint256)": EventFragment;
@@ -242,9 +243,13 @@ export interface YieldFarmingInterface extends utils.Interface {
 
 export interface ClaimEventObject {
   user: string;
-  amount: BigNumber;
+  amount1: BigNumber;
+  amount2: BigNumber;
 }
-export type ClaimEvent = TypedEvent<[string, BigNumber], ClaimEventObject>;
+export type ClaimEvent = TypedEvent<
+  [string, BigNumber, BigNumber],
+  ClaimEventObject
+>;
 
 export type ClaimEventFilter = TypedEventFilter<ClaimEvent>;
 
@@ -279,12 +284,12 @@ export type WithdrawEvent = TypedEvent<
 
 export type WithdrawEventFilter = TypedEventFilter<WithdrawEvent>;
 
-export interface YieldFarming extends BaseContract {
+export interface FarmingYield extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: YieldFarmingInterface;
+  interface: FarmingYieldInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -306,6 +311,10 @@ export interface YieldFarming extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    accReward1PerShare(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    accReward2PerShare(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     claim(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -317,27 +326,19 @@ export interface YieldFarming extends BaseContract {
 
     depositFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    distributionProfit(
-      income: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    getLockedAmount(
-      staker: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    lastRewardBlockNumbers(
+    lastBlockTimeStamp(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    lastRewardBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     lockPeriod(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     pendingReward(
-      user: PromiseOrValue<string>,
+      _user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
 
@@ -353,13 +354,6 @@ export interface YieldFarming extends BaseContract {
 
     rewardToken2(overrides?: CallOverrides): Promise<[string]>;
 
-    stakedBalances(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    stakingReward(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     stakingToken(overrides?: CallOverrides): Promise<[string]>;
 
     totalStaked(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -373,11 +367,30 @@ export interface YieldFarming extends BaseContract {
 
     treasuryFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    update(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    userInfo(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        amount: BigNumber;
+        reward1Debt: BigNumber;
+        reward2Debt: BigNumber;
+      }
+    >;
+
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
+
+  accReward1PerShare(overrides?: CallOverrides): Promise<BigNumber>;
+
+  accReward2PerShare(overrides?: CallOverrides): Promise<BigNumber>;
 
   claim(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -390,27 +403,19 @@ export interface YieldFarming extends BaseContract {
 
   depositFee(overrides?: CallOverrides): Promise<BigNumber>;
 
-  distributionProfit(
-    income: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  getLockedAmount(
-    staker: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  lastRewardBlockNumbers(
+  lastBlockTimeStamp(
     arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
   lockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
   pendingReward(
-    user: PromiseOrValue<string>,
+    _user: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<[BigNumber, BigNumber]>;
 
@@ -426,13 +431,6 @@ export interface YieldFarming extends BaseContract {
 
   rewardToken2(overrides?: CallOverrides): Promise<string>;
 
-  stakedBalances(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  stakingReward(overrides?: CallOverrides): Promise<BigNumber>;
-
   stakingToken(overrides?: CallOverrides): Promise<string>;
 
   totalStaked(overrides?: CallOverrides): Promise<BigNumber>;
@@ -446,12 +444,31 @@ export interface YieldFarming extends BaseContract {
 
   treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
 
+  update(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  userInfo(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      amount: BigNumber;
+      reward1Debt: BigNumber;
+      reward2Debt: BigNumber;
+    }
+  >;
+
   withdraw(
     amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    accReward1PerShare(overrides?: CallOverrides): Promise<BigNumber>;
+
+    accReward2PerShare(overrides?: CallOverrides): Promise<BigNumber>;
+
     claim(overrides?: CallOverrides): Promise<void>;
 
     deposit(
@@ -461,27 +478,19 @@ export interface YieldFarming extends BaseContract {
 
     depositFee(overrides?: CallOverrides): Promise<BigNumber>;
 
-    distributionProfit(
-      income: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    getLockedAmount(
-      staker: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    lastRewardBlockNumbers(
+    lastBlockTimeStamp(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
     lockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
     pendingReward(
-      user: PromiseOrValue<string>,
+      _user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
 
@@ -494,13 +503,6 @@ export interface YieldFarming extends BaseContract {
     rewardToken1(overrides?: CallOverrides): Promise<string>;
 
     rewardToken2(overrides?: CallOverrides): Promise<string>;
-
-    stakedBalances(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    stakingReward(overrides?: CallOverrides): Promise<BigNumber>;
 
     stakingToken(overrides?: CallOverrides): Promise<string>;
 
@@ -515,6 +517,19 @@ export interface YieldFarming extends BaseContract {
 
     treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
 
+    update(overrides?: CallOverrides): Promise<void>;
+
+    userInfo(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        amount: BigNumber;
+        reward1Debt: BigNumber;
+        reward2Debt: BigNumber;
+      }
+    >;
+
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -522,13 +537,15 @@ export interface YieldFarming extends BaseContract {
   };
 
   filters: {
-    "Claim(address,uint256)"(
+    "Claim(address,uint256,uint256)"(
       user?: PromiseOrValue<string> | null,
-      amount?: null
+      amount1?: null,
+      amount2?: null
     ): ClaimEventFilter;
     Claim(
       user?: PromiseOrValue<string> | null,
-      amount?: null
+      amount1?: null,
+      amount2?: null
     ): ClaimEventFilter;
 
     "Deposit(address,uint256)"(
@@ -560,6 +577,10 @@ export interface YieldFarming extends BaseContract {
   };
 
   estimateGas: {
+    accReward1PerShare(overrides?: CallOverrides): Promise<BigNumber>;
+
+    accReward2PerShare(overrides?: CallOverrides): Promise<BigNumber>;
+
     claim(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -571,27 +592,19 @@ export interface YieldFarming extends BaseContract {
 
     depositFee(overrides?: CallOverrides): Promise<BigNumber>;
 
-    distributionProfit(
-      income: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    getLockedAmount(
-      staker: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    lastRewardBlockNumbers(
+    lastBlockTimeStamp(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
     lockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     pendingReward(
-      user: PromiseOrValue<string>,
+      _user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -607,13 +620,6 @@ export interface YieldFarming extends BaseContract {
 
     rewardToken2(overrides?: CallOverrides): Promise<BigNumber>;
 
-    stakedBalances(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    stakingReward(overrides?: CallOverrides): Promise<BigNumber>;
-
     stakingToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalStaked(overrides?: CallOverrides): Promise<BigNumber>;
@@ -627,6 +633,15 @@ export interface YieldFarming extends BaseContract {
 
     treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
 
+    update(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    userInfo(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -634,6 +649,14 @@ export interface YieldFarming extends BaseContract {
   };
 
   populateTransaction: {
+    accReward1PerShare(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    accReward2PerShare(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     claim(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -645,27 +668,19 @@ export interface YieldFarming extends BaseContract {
 
     depositFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    distributionProfit(
-      income: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    getLockedAmount(
-      staker: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    lastRewardBlockNumbers(
+    lastBlockTimeStamp(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    lastRewardBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     lockPeriod(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     pendingReward(
-      user: PromiseOrValue<string>,
+      _user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -681,13 +696,6 @@ export interface YieldFarming extends BaseContract {
 
     rewardToken2(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    stakedBalances(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    stakingReward(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     stakingToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalStaked(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -700,6 +708,15 @@ export interface YieldFarming extends BaseContract {
     treasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     treasuryFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    update(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    userInfo(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
