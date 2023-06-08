@@ -1,0 +1,20 @@
+{
+   "standalone": {
+      "WETH": "0xC2Bf5F29a4384b1aB0C063e1c666f02121B6084a",
+      "factory": "0x5c4242beB94dE30b922f57241f1D02f36e906915",
+      "router": "0x42e2EE7Ba8975c473157634Ac2AF4098190fc741",
+      "multicall": "0xF8cef78E923919054037a1D03662bBD884fF4edf",
+      "init_code_hash": "0x01429e880a7972ebfbba904a5bbe32a816e78273e4b38ffa6bdeaebce8adba7c",
+      "tok1": "0xe573BCA813c741229ffB2488F7856C6cAa841041",
+      "tok2": "0xBb0CC0fb3e0c06725c67167501f850B4900D6DB5"
+   },
+   "moonbase": {
+      "WETH": "0x63f4Fd30Da76FFfb7fE4A560Fa6dc65107873740",
+      "Factory": "0x8233Bbaf89FC50c314766F04aB7d1a15c50462bf",
+      "Router": "0x6C828A68Fc10e669958c70C7569Be26B94db5b5e",
+      "multicall": "0xfaf025613a56E161e9dAC3A343d50a5aec4F9901",
+      "init_code_hash": "0x01429e880a7972ebfbba904a5bbe32a816e78273e4b38ffa6bdeaebce8adba7c",
+      "tok1": "0x7C6E901f0d1C039d7f7e115e151a767408De8acB",
+      "tok2": "0xF21D0423511C0a402c43fa046ee33e97e8c91968"
+   }
+}

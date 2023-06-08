@@ -2,89 +2,172 @@ import { ethers } from "hardhat";
 import { expect } from "chai";
 import { Contract, Signer } from "ethers";
 
-describe("YieldFarming", () => {
+describe("FarmingYield", () => {
+  let FarmingYield: Contract;
+  let ERC20Mock: Contract;
   let stakingToken: Contract;
   let rewardToken1: Contract;
   let rewardToken2: Contract;
-  let yieldFarming: Contract;
   let owner: Signer;
-  let user1: Signer;
-  let user2: Signer;
+  let addr1: Signer;
+  let addr2: Signer;
   let treasury: Signer;
 
   beforeEach(async () => {
-    const ERC20 = await ethers.getContractFactory("ERC20Mock");
-    const YieldFarming = await ethers.getContractFactory("YieldFarming");
+    [owner, addr1, addr2, treasury] = await ethers.getSigners();
 
-    [owner, user1, user2, treasury] = await ethers.getSigners();
+    const ERC20MockFactory = await ethers.getContractFactory("ERC20Mock");
+    stakingToken = await ERC20MockFactory.deploy("Staking Token", "STK");
+    rewardToken1 = await ERC20MockFactory.deploy("Reward Token 1", "RT1");
+    rewardToken2 = await ERC20MockFactory.deploy("Reward Token 2", "RT2");
 
-    stakingToken = await ERC20.deploy("Staking Token", "STK");
-    rewardToken1 = await ERC20.deploy("Reward Token 1", "RWD1");
-    rewardToken2 = await ERC20.deploy("Reward Token 2", "RWD2");
-
-    yieldFarming = await YieldFarming.deploy(
+    const FarmingYieldFactory = await ethers.getContractFactory("FarmingYield");
+    FarmingYield = await FarmingYieldFactory.deploy(
       stakingToken.address,
       rewardToken1.address,
       rewardToken2.address,
-      1, // depositFee
-      1, // treasuryFee
-      await treasury.getAddress(),
-      100, // reward1PerBlock
-      200 // reward2PerBlock
+      1, // depositFeePercent
+      await treasury.getAddress(), // treasury
+      1000, // reward1PerBlock
+      2000 // reward2PerBlock
     );
-
-    await stakingToken.mint(await user1.getAddress(), ethers.utils.parseEther("1000"));
-    await stakingToken.mint(await user2.getAddress(), ethers.utils.parseEther("1000"));
-
-    await rewardToken1.mint(yieldFarming.address, ethers.utils.parseEther("1000000"));
-    await rewardToken2.mint(yieldFarming.address, ethers.utils.parseEther("1000000"));
-
-    await stakingToken.connect(user1).approve(yieldFarming.address, ethers.utils.parseEther("1000"));
-    await stakingToken.connect(user2).approve(yieldFarming.address, ethers.utils.parseEther("1000"));
   });
 
-  it("should allow users to deposit and withdraw", async () => {
-    await yieldFarming.connect(user1).deposit(ethers.utils.parseEther("100"));
-    expect(await stakingToken.balanceOf(await user1.getAddress())).to.equal(ethers.utils.parseEther("900"));
+  describe("Deployment", () => {
+    it("Should set the correct staking token", async () => {
+      expect(await FarmingYield.stakingToken()).to.equal(stakingToken.address);
+    });
 
-    await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60]); // Increase time by 30 days
-    await ethers.provider.send("evm_mine", []);
-
-    await yieldFarming.connect(user1).withdraw(ethers.utils.parseEther("99"));
-    expect(await stakingToken.balanceOf(await user1.getAddress())).to.equal(ethers.utils.parseEther("999"));
+    it("Should set the correct reward tokens", async () => {
+      expect(await FarmingYield.rewardToken1()).to.equal(rewardToken1.address);
+      expect(await FarmingYield.rewardToken2()).to.equal(rewardToken2.address);
+    });
   });
 
-  it("should distribute rewards correctly", async () => {
-    await yieldFarming.connect(user1).deposit(ethers.utils.parseEther("100"));
-    await yieldFarming.connect(user2).deposit(ethers.utils.parseEther("200"));
+  describe("Deposit", () => {
+    it("Deposit amount should be greater than 0", async() => {
+      await expect(FarmingYield.connect(addr1).deposit(0)).to.be.revertedWith("Amount must be greater than 0");
+    });
 
-    await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60]); // Increase time by 30 days
-    await ethers.provider.send("evm_mine", []);
+    it("Should deposit staking tokens", async () => {
+      // Mint some staking tokens for addr1
+      await stakingToken.connect(owner).mint(await addr1.getAddress(), 1000);
 
-    await yieldFarming.connect(user1).claim();
-    await yieldFarming.connect(user2).claim();
+      // Approve FarmingYield contract to spend addr1's staking tokens
+      await stakingToken.connect(addr1).approve(FarmingYield.address, 1000);
 
-    expect(await rewardToken1.balanceOf(await user1.getAddress())).to.be.equal(ethers.BigNumber.from("267300"));
-    expect(await rewardToken2.balanceOf(await user1.getAddress())).to.be.equal(ethers.BigNumber.from("534600"));
+      // Deposit staking tokens
+      await FarmingYield.connect(addr1).deposit(1000);
 
-    expect(await rewardToken1.balanceOf(await user2.getAddress())).to.be.equal(ethers.BigNumber.from("554400"));
-    expect(await rewardToken2.balanceOf(await user2.getAddress())).to.be.equal(ethers.BigNumber.from("1108800"));
+      // Check if the deposit was successful
+      const userInfo = await FarmingYield.userInfo(await addr1.getAddress());
+      expect(userInfo.amount).to.equal(990); // 1000 - 1% deposit fee
+    });
+    it("get Reward tokens from deposit", async () => {
+      // Mint some staking tokens for addr1
+      await stakingToken.connect(owner).mint(await addr1.getAddress(), 2020);
+      // Approve FarmingYield contract to spend addr1's staking tokens
+      await stakingToken.connect(addr1).approve(FarmingYield.address, 2020);
+      // Deposit staking tokens
+      await FarmingYield.connect(addr1).deposit(1010);
+      
+      await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+      //2 blocks are minted
+
+      await FarmingYield.connect(addr1).deposit(1010);
+      // Check if the deposit was successful
+      const userInfo = await FarmingYield.userInfo(await addr1.getAddress());
+      //console.log(await rewardToken1.balanceOf(await addr1.getAddress()));
+      
+      //amount of rewardtoken1 based on share from staking amount in 90% total reward token.
+      await expect (await rewardToken1.balanceOf(await addr1.getAddress())).to.be.equal(ethers.BigNumber.from("1800")); // ({blockpass = 2}*1000)*90/100
+      
+      //amount of rewardtoken1 in treasure. (10%)
+      await expect (await rewardToken1.balanceOf(await treasury.getAddress())).to.be.equal(ethers.BigNumber.from("200"));
+      expect(userInfo.amount).to.equal(2000); //  2020 - fee
+    });
   });
-  it("should allow user to withdraw only withdrawal amount", async () => {
-    await yieldFarming.connect(user1).deposit(ethers.utils.parseEther("100"));
 
-    await ethers.provider.send("evm_increaseTime", [15 * 24 * 60 * 60]); // Increase time by 30 days
-    await ethers.provider.send("evm_mine", []);
 
-    await yieldFarming.connect(user1).deposit(ethers.utils.parseEther("50"));
-    
-    await ethers.provider.send("evm_increaseTime", [20 * 24 * 60 * 60]); // Increase time by 30 days
-    await ethers.provider.send("evm_mine", []);
-    await expect(yieldFarming.connect(user1).withdraw(ethers.utils.parseEther("150"))).to.be.revertedWith("Amount must be less than or equal to withdrawal Amount");
+  describe("Withdraw", () => {
+    beforeEach(async () => {
+      // Mint some staking tokens for addr1 and deposit them
+      await stakingToken.connect(owner).mint(await addr1.getAddress(), 1000);
+      await stakingToken.connect(addr1).approve(FarmingYield.address, 1000);
+      await FarmingYield.connect(addr1).deposit(1000);
+    });
+    it("Deposit amount should be greater than 0", async() => {
+      await expect(FarmingYield.connect(addr1).withdraw(0)).to.be.revertedWith("Amount must be greater than 0");
+    });
+
+    it("Should not withdraw staking tokens in lock period", async () => {
+      await expect(FarmingYield.connect(addr1).withdraw(500)).to.be.revertedWith("Can not withdraw in lock_period time");
+    });
+
+    it("Should withdraw staking tokens after lock period", async () => {
+      // Increase time to pass the lock period
+      await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+  
+      // Withdraw staking tokens
+      await FarmingYield.connect(addr1).withdraw(500);
+  
+      // Check if the withdraw was successful
+      const userInfo = await FarmingYield.userInfo(await addr1.getAddress());
+      expect(userInfo.amount).to.equal(490); // 990 - 500
+    });
+  
+    it("Should emit Withdraw event", async () => {
+      // Increase time to pass the lock period
+      await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine", []);
+  
+      // Check if the Withdraw event is emitted
+      await expect(FarmingYield.connect(addr1).withdraw(500))
+        .to.emit(FarmingYield, "Withdraw")
+        .withArgs(await addr1.getAddress(), 500);
+    });
+  
+    // Add more tests for withdraw here
   });
-  it("Deposit amount and withdraw amount should be greater than 0", async() => {
-    await expect(yieldFarming.connect(user1).deposit(ethers.utils.parseEther("0"))).to.be.revertedWith("Amount must be greater than 0");
-    await yieldFarming.connect(user1).deposit(ethers.utils.parseEther("100"));
-    await expect(yieldFarming.connect(user1).withdraw(ethers.utils.parseEther("0"))).to.be.revertedWith("Amount must be greater than 0");
+  
+  describe("Claim", () => {
+    beforeEach(async () => {
+      // Mint some staking tokens for addr1 and deposit them
+      await stakingToken.connect(owner).mint(await addr1.getAddress(), 1010);
+      await stakingToken.connect(addr1).approve(FarmingYield.address, 1010);
+      await FarmingYield.connect(addr1).deposit(1010);
+    });
+  
+    it("Should claim pending rewards", async () => {
+      // Increase time to generate some rewards
+      await ethers.provider.send("evm_increaseTime", [1000]);
+      await ethers.provider.send("evm_mine", []);
+  
+      // Claim rewards
+      await FarmingYield.connect(addr1).claim();
+  
+      // Check if the claim was successful
+      const reward1Balance = await rewardToken1.balanceOf(await addr1.getAddress());
+      const reward2Balance = await rewardToken2.balanceOf(await addr1.getAddress());
+      expect(reward1Balance).to.be.gt(0);
+      expect(reward2Balance).to.be.gt(0);
+    });
+  
+    it("Should emit Claim event", async () => {
+      // Increase time to generate some rewards
+      await ethers.provider.send("evm_increaseTime", [1000]);
+      await ethers.provider.send("evm_mine", []);
+      await ethers.provider.send("evm_mine", []);
+      await ethers.provider.send("evm_mine", []);
+      // 4 blocks are minted
+        
+      // Check if the Claim event is emitted
+      await expect(FarmingYield.connect(addr1).claim())
+        .to.emit(FarmingYield, "Claim")
+       .withArgs(await addr1.getAddress(), 4000, 8000); //blockpass = s4
+    });
   });
+
 });
