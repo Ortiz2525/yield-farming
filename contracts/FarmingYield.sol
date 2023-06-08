@@ -142,7 +142,7 @@ contract FarmingYield is Ownable {
         );
         rewardToken1.transfer(treasury, pendingReward1.mul(10).div(100));
         rewardToken2.transfer(treasury, pendingReward2.mul(10).div(100));
-
+        
         rewardToken1.transfer(
             msg.sender,
             pendingReward1.sub(pendingReward1.mul(10).div(100))
