@@ -48,7 +48,6 @@ export interface FarmingYieldInterface extends utils.Interface {
     "totalStaked()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "treasury()": FunctionFragment;
-    "treasuryFee()": FunctionFragment;
     "update()": FunctionFragment;
     "userInfo(address)": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
@@ -75,7 +74,6 @@ export interface FarmingYieldInterface extends utils.Interface {
       | "totalStaked"
       | "transferOwnership"
       | "treasury"
-      | "treasuryFee"
       | "update"
       | "userInfo"
       | "withdraw"
@@ -148,10 +146,6 @@ export interface FarmingYieldInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "treasury", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "treasuryFee",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "update", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "userInfo",
@@ -220,10 +214,6 @@ export interface FarmingYieldInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "treasury", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "treasuryFee",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "update", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "userInfo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
@@ -365,8 +355,6 @@ export interface FarmingYield extends BaseContract {
 
     treasury(overrides?: CallOverrides): Promise<[string]>;
 
-    treasuryFee(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     update(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -442,8 +430,6 @@ export interface FarmingYield extends BaseContract {
 
   treasury(overrides?: CallOverrides): Promise<string>;
 
-  treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
-
   update(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -514,8 +500,6 @@ export interface FarmingYield extends BaseContract {
     ): Promise<void>;
 
     treasury(overrides?: CallOverrides): Promise<string>;
-
-    treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     update(overrides?: CallOverrides): Promise<void>;
 
@@ -631,8 +615,6 @@ export interface FarmingYield extends BaseContract {
 
     treasury(overrides?: CallOverrides): Promise<BigNumber>;
 
-    treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
-
     update(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -706,8 +688,6 @@ export interface FarmingYield extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     treasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    treasuryFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     update(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
