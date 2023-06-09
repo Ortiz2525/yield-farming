@@ -44,7 +44,6 @@ contract FarmingYield is Ownable {
 
 
     mapping(address => UserInfo) public userInfo;
-    mapping(address => uint256) public lastBlockTimeStamp;
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
     event Claim(address indexed user, uint256 amount1, uint256 amount2);
@@ -133,7 +132,6 @@ contract FarmingYield is Ownable {
         user.amount = user.amount.add(netAmount);
         user.reward1Debt = user.amount.mul(accReward1PerShare).div(1e12);
         user.reward2Debt = user.amount.mul(accReward2PerShare).div(1e12);
-        lastBlockTimeStamp[msg.sender] = block.timestamp;
         user.fundInfo.push(FundInfo(netAmount, block.timestamp));
         emit Deposit(msg.sender, netAmount);
     }
@@ -151,10 +149,6 @@ contract FarmingYield is Ownable {
     function withdraw(uint256 amount) public {
         require(amount > 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
-        // require(
-        //     (block.timestamp - lastBlockTimeStamp[msg.sender]) >= 30 days,
-        //     "Can not withdraw in lock_period time"
-        // );
         (, uint withdrawableAmount)=getFundInfo(msg.sender);
         require(amount <= withdrawableAmount, "Amount must be less than withdrawable amount");
         update();

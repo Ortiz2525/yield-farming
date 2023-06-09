@@ -35,7 +35,6 @@ export interface FarmingYieldInterface extends utils.Interface {
     "deposit(uint256)": FunctionFragment;
     "depositFee()": FunctionFragment;
     "getFundInfo(address)": FunctionFragment;
-    "lastBlockTimeStamp(address)": FunctionFragment;
     "lastRewardBlock()": FunctionFragment;
     "lockPeriod()": FunctionFragment;
     "owner()": FunctionFragment;
@@ -62,7 +61,6 @@ export interface FarmingYieldInterface extends utils.Interface {
       | "deposit"
       | "depositFee"
       | "getFundInfo"
-      | "lastBlockTimeStamp"
       | "lastRewardBlock"
       | "lockPeriod"
       | "owner"
@@ -100,10 +98,6 @@ export interface FarmingYieldInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getFundInfo",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastBlockTimeStamp",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -175,10 +169,6 @@ export interface FarmingYieldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "depositFee", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getFundInfo",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastBlockTimeStamp",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -331,11 +321,6 @@ export interface FarmingYield extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
 
-    lastBlockTimeStamp(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     lastRewardBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     lockPeriod(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -411,11 +396,6 @@ export interface FarmingYield extends BaseContract {
     overrides?: CallOverrides
   ): Promise<[BigNumber, BigNumber]>;
 
-  lastBlockTimeStamp(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
   lockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
@@ -488,11 +468,6 @@ export interface FarmingYield extends BaseContract {
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
-
-    lastBlockTimeStamp(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -606,11 +581,6 @@ export interface FarmingYield extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    lastBlockTimeStamp(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
     lockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
@@ -682,11 +652,6 @@ export interface FarmingYield extends BaseContract {
 
     getFundInfo(
       _user: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    lastBlockTimeStamp(
-      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
