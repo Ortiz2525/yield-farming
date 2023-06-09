@@ -34,6 +34,7 @@ export interface FarmingYieldInterface extends utils.Interface {
     "claim()": FunctionFragment;
     "deposit(uint256)": FunctionFragment;
     "depositFee()": FunctionFragment;
+    "getFundInfo(address)": FunctionFragment;
     "lastBlockTimeStamp(address)": FunctionFragment;
     "lastRewardBlock()": FunctionFragment;
     "lockPeriod()": FunctionFragment;
@@ -60,6 +61,7 @@ export interface FarmingYieldInterface extends utils.Interface {
       | "claim"
       | "deposit"
       | "depositFee"
+      | "getFundInfo"
       | "lastBlockTimeStamp"
       | "lastRewardBlock"
       | "lockPeriod"
@@ -95,6 +97,10 @@ export interface FarmingYieldInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "depositFee",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getFundInfo",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "lastBlockTimeStamp",
@@ -167,6 +173,10 @@ export interface FarmingYieldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "depositFee", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getFundInfo",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "lastBlockTimeStamp",
     data: BytesLike
@@ -316,6 +326,11 @@ export interface FarmingYield extends BaseContract {
 
     depositFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    getFundInfo(
+      _user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber]>;
+
     lastBlockTimeStamp(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -391,6 +406,11 @@ export interface FarmingYield extends BaseContract {
 
   depositFee(overrides?: CallOverrides): Promise<BigNumber>;
 
+  getFundInfo(
+    _user: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, BigNumber]>;
+
   lastBlockTimeStamp(
     arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -463,6 +483,11 @@ export interface FarmingYield extends BaseContract {
     ): Promise<void>;
 
     depositFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getFundInfo(
+      _user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber]>;
 
     lastBlockTimeStamp(
       arg0: PromiseOrValue<string>,
@@ -576,6 +601,11 @@ export interface FarmingYield extends BaseContract {
 
     depositFee(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getFundInfo(
+      _user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     lastBlockTimeStamp(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -649,6 +679,11 @@ export interface FarmingYield extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     depositFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getFundInfo(
+      _user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     lastBlockTimeStamp(
       arg0: PromiseOrValue<string>,

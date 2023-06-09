@@ -22,6 +22,7 @@ describe("FarmingYield", () => {
     rewardToken2 = await ERC20MockFactory.deploy("Reward Token 2", "RT2");
 
     const FarmingYieldFactory = await ethers.getContractFactory("FarmingYield");
+    const lockPeriod = 30 * 24 * 60 * 60;
     FarmingYield = await FarmingYieldFactory.deploy(
       stakingToken.address,
       rewardToken1.address,
@@ -29,7 +30,8 @@ describe("FarmingYield", () => {
       1, // depositFeePercent
       await treasury.getAddress(), // treasury
       1000, // reward1PerBlock
-      2000 // reward2PerBlock
+      2000, // reward2PerBlock
+      lockPeriod
     );
   });
 
@@ -93,16 +95,21 @@ describe("FarmingYield", () => {
   describe("Withdraw", () => {
     beforeEach(async () => {
       // Mint some staking tokens for addr1 and deposit them
-      await stakingToken.connect(owner).mint(await addr1.getAddress(), 1000);
-      await stakingToken.connect(addr1).approve(FarmingYield.address, 1000);
+      await stakingToken.connect(owner).mint(await addr1.getAddress(), 2000);
+      await stakingToken.connect(addr1).approve(FarmingYield.address, 2000);
       await FarmingYield.connect(addr1).deposit(1000);
     });
     it("Deposit amount should be greater than 0", async() => {
       await expect(FarmingYield.connect(addr1).withdraw(0)).to.be.revertedWith("Amount must be greater than 0");
     });
 
-    it("Should not withdraw staking tokens in lock period", async () => {
-      await expect(FarmingYield.connect(addr1).withdraw(500)).to.be.revertedWith("Can not withdraw in lock_period time");
+    it("Withdraw amount should be less than withdrawable amount", async () => {
+      await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+      await FarmingYield.connect(addr1).deposit(1000);
+      await ethers.provider.send("evm_increaseTime", [10 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+      await expect(FarmingYield.connect(addr1).withdraw(1500)).to.be.revertedWith("Amount must be less than withdrawable amount");
     });
 
     it("Should withdraw staking tokens after lock period", async () => {
@@ -151,8 +158,8 @@ describe("FarmingYield", () => {
       // Check if the claim was successful
       const reward1Balance = await rewardToken1.balanceOf(await addr1.getAddress());
       const reward2Balance = await rewardToken2.balanceOf(await addr1.getAddress());
-      expect(reward1Balance).to.be.gt(0);
-      expect(reward2Balance).to.be.gt(0);
+      expect(reward1Balance).to.be.equal(ethers.BigNumber.from(1800));  //blockpass=2  1000*2*90/100
+      expect(reward2Balance).to.be.equal(ethers.BigNumber.from(3600));
     });
   
     it("Should emit Claim event", async () => {
@@ -166,8 +173,7 @@ describe("FarmingYield", () => {
       // Check if the Claim event is emitted
       await expect(FarmingYield.connect(addr1).claim())
         .to.emit(FarmingYield, "Claim")
-       .withArgs(await addr1.getAddress(), 4000, 8000); //blockpass = s4
+       .withArgs(await addr1.getAddress(), 3600, 7200); //blockpass = 4
     });
   });
-
 });
