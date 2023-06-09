@@ -42,12 +42,10 @@ contract FarmingYield is Ownable {
         FundInfo[] fundInfo;
     }
 
-
     mapping(address => UserInfo) public userInfo;
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
     event Claim(address indexed user, uint256 amount1, uint256 amount2);
-    
 
     constructor(
         IERC20 _stakingToken,
@@ -68,7 +66,7 @@ contract FarmingYield is Ownable {
         reward2PerBlock = _reward2PerBlock;
         lastRewardBlock = block.number;
         accReward1PerShare = 0;
-        lockPeriod=_lockPeriod;
+        lockPeriod = _lockPeriod;
     }
 
     function pendingReward(
@@ -136,28 +134,32 @@ contract FarmingYield is Ownable {
         emit Deposit(msg.sender, netAmount);
     }
 
-    function getFundInfo(address _user) public view returns (uint256 , uint256) {
-         UserInfo storage user = userInfo[_user];
+    function getFundInfo(address _user) public view returns (uint256, uint256) {
+        UserInfo storage user = userInfo[_user];
         uint256 lockedAmount = 0;
         for (uint256 i = 0; i < user.fundInfo.length; i++) {
             uint256 elapsedTime = block.timestamp - user.fundInfo[i].timestamps;
-            if (elapsedTime < lockPeriod)  lockedAmount += user.fundInfo[i].amount;
+            if (elapsedTime < lockPeriod)
+                lockedAmount += user.fundInfo[i].amount;
         }
-        return (lockedAmount, user.amount-lockedAmount);
+        return (lockedAmount, user.amount - lockedAmount);
     }
 
     function withdraw(uint256 amount) public {
         require(amount > 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
-        (, uint withdrawableAmount)=getFundInfo(msg.sender);
-        require(amount <= withdrawableAmount, "Amount must be less than withdrawable amount");
+        (, uint withdrawableAmount) = getFundInfo(msg.sender);
+        require(
+            amount <= withdrawableAmount,
+            "Amount must be less than withdrawable amount"
+        );
         update();
         (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
             msg.sender
         );
         rewardToken1.transfer(treasury, pendingReward1.mul(10).div(100));
         rewardToken2.transfer(treasury, pendingReward2.mul(10).div(100));
-        
+
         rewardToken1.transfer(
             msg.sender,
             pendingReward1.sub(pendingReward1.mul(10).div(100))
@@ -183,16 +185,10 @@ contract FarmingYield is Ownable {
         //send pending amount
         rewardToken1.transfer(treasury, pendingReward1.mul(10).div(100));
         rewardToken2.transfer(treasury, pendingReward2.mul(10).div(100));
-        pendingReward1=pendingReward1.sub(pendingReward1.mul(10).div(100));
-        pendingReward2=pendingReward2.sub(pendingReward2.mul(10).div(100));
-        rewardToken1.transfer(
-            msg.sender,
-            pendingReward1
-        );
-        rewardToken2.transfer(
-            msg.sender,
-            pendingReward2
-        );
+        pendingReward1 = pendingReward1.sub(pendingReward1.mul(10).div(100));
+        pendingReward2 = pendingReward2.sub(pendingReward2.mul(10).div(100));
+        rewardToken1.transfer(msg.sender, pendingReward1);
+        rewardToken2.transfer(msg.sender, pendingReward2);
 
         user.reward1Debt = user.amount.mul(accReward1PerShare).div(1e12);
         user.reward2Debt = user.amount.mul(accReward2PerShare).div(1e12);
