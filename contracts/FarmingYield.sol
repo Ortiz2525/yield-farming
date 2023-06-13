@@ -34,6 +34,7 @@ contract FarmingYield is Ownable {
         uint256 amount;
         uint256 timestamps;
     }
+
     struct UserInfo {
         uint256 amount; // How many staking tokens the user has provided.
         // Reward debt.
@@ -69,55 +70,80 @@ contract FarmingYield is Ownable {
         lockPeriod = _lockPeriod;
     }
 
-    function pendingReward(
-        address _user
-    ) public view returns (uint256, uint256) {
+    function optimize(address _user) public {
         UserInfo storage user = userInfo[_user];
-        return (
-            user.amount.mul(accReward1PerShare).div(1e12).sub(user.reward1Debt),
-            user.amount.mul(accReward2PerShare).div(1e12).sub(user.reward2Debt)
-        );
+        uint256 unlockedAmount = 0;
+        uint256 lockIndex = user.fundInfo.length;
+
+        if (lockIndex <= 1) return;
+
+        uint256 i;
+        for (i = 0; i < user.fundInfo.length; i++) {
+            uint256 elapsedTime = block.timestamp - user.fundInfo[i].timestamps;
+            if (elapsedTime < lockPeriod) {
+                lockIndex = i;
+                break;
+            } else {
+                unlockedAmount += user.fundInfo[i].amount;
+            }
+        }
+        if (lockIndex <= 1) return;
+        user.fundInfo[0].amount = unlockedAmount;
+        uint256 length = user.fundInfo.length;
+        for (i = length - 1; i >= lockIndex; i--) {
+            //     console.log(user.fundInfo.length, lockIndex, i-lockIndex+1, i);
+            user.fundInfo[i - lockIndex + 1].amount = user.fundInfo[i].amount;
+            user.fundInfo[i - lockIndex + 1].timestamps = user
+                .fundInfo[i]
+                .timestamps;
+        }
+        for (i = 1; i < lockIndex; i++) user.fundInfo.pop();
     }
 
     function update() public {
-        uint256 StakingSupply = stakingToken.balanceOf(address(this));
+        uint256 stakingSupply = stakingToken.balanceOf(address(this));
 
-        if (StakingSupply == 0) {
+        if (stakingSupply == 0) {
             lastRewardBlock = block.number;
             return;
         }
-        uint256 multiplier = block.number.sub(lastRewardBlock);
-        uint256 Reward1 = multiplier.mul(reward1PerBlock);
-        uint256 Reward2 = multiplier.mul(reward2PerBlock);
+        uint256 multiplier = block.number - lastRewardBlock;
+        uint256 reward1 = multiplier * reward1PerBlock;
+        uint256 reward2 = multiplier * reward2PerBlock;
 
-        rewardToken1.mint(address(this), Reward1);
-        rewardToken2.mint(address(this), Reward2);
-        accReward1PerShare = accReward1PerShare.add(
-            Reward1.mul(1e12).div(StakingSupply)
-        );
-        accReward2PerShare = accReward2PerShare.add(
-            Reward2.mul(1e12).div(StakingSupply)
-        );
+        rewardToken1.mint(address(this), reward1);
+        rewardToken2.mint(address(this), reward2);
+        accReward1PerShare =
+            accReward1PerShare +
+            (reward1 * 1e12) /
+            stakingSupply;
+        accReward2PerShare =
+            accReward2PerShare +
+            (reward2 * 1e12) /
+            stakingSupply;
         lastRewardBlock = block.number;
     }
 
     function deposit(uint256 amount) public {
         require(amount > 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
+        optimize(msg.sender);
+
         update();
+
         if (user.amount > 0) {
             (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
                 msg.sender
             );
-            rewardToken1.transfer(treasury, pendingReward1.mul(10).div(100));
-            rewardToken2.transfer(treasury, pendingReward2.mul(10).div(100));
+            rewardToken1.transfer(treasury, (pendingReward1 * 10) / 100);
+            rewardToken2.transfer(treasury, (pendingReward2 * 10) / 100);
             rewardToken1.transfer(
                 msg.sender,
-                pendingReward1.sub(pendingReward1.mul(10).div(100))
+                pendingReward1 - (pendingReward1 * 10) / 100
             );
             rewardToken2.transfer(
                 msg.sender,
-                pendingReward2.sub(pendingReward2.mul(10).div(100))
+                pendingReward2 - (pendingReward2 * 10) / 100
             );
         }
 
@@ -127,11 +153,67 @@ contract FarmingYield is Ownable {
 
         stakingToken.transfer(treasury, fee);
 
-        user.amount = user.amount.add(netAmount);
-        user.reward1Debt = user.amount.mul(accReward1PerShare).div(1e12);
-        user.reward2Debt = user.amount.mul(accReward2PerShare).div(1e12);
+        user.amount = user.amount + netAmount;
+        user.reward1Debt = (user.amount * accReward1PerShare) / 1e12;
+        user.reward2Debt = (user.amount * accReward2PerShare) / 1e12;
         user.fundInfo.push(FundInfo(netAmount, block.timestamp));
+        //console.log(user.fundInfo[0].amount, user.fundInfo.length);
         emit Deposit(msg.sender, netAmount);
+    }
+
+    function withdraw(uint256 amount) public {
+        require(amount > 0, "Amount must be greater than 0");
+        UserInfo storage user = userInfo[msg.sender];
+        optimize(msg.sender);
+        //console.log(user.fundInfo[0].amount, user.fundInfo.length);
+        (, uint withdrawableAmount) = getFundInfo(msg.sender);
+        //console.log("withdraw ", withdrawableAmount);
+        require(
+            amount <= withdrawableAmount,
+            "Amount must be less than withdrawable amount"
+        );
+
+        update();
+        (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
+            msg.sender
+        );
+        rewardToken1.transfer(treasury, (pendingReward1 * 10) / 100);
+        rewardToken2.transfer(treasury, (pendingReward2 * 10) / 100);
+        rewardToken1.transfer(
+            msg.sender,
+            pendingReward1 - (pendingReward1 * 10) / 100
+        );
+        rewardToken2.transfer(
+            msg.sender,
+            pendingReward2 - (pendingReward2 * 10) / 100
+        );
+
+        user.amount = user.amount - amount;
+        user.reward1Debt = (user.amount * accReward1PerShare) / 1e12;
+        user.reward2Debt = (user.amount * accReward2PerShare) / 1e12;
+        stakingToken.transfer(msg.sender, amount);
+        user.fundInfo[0].amount -= amount;
+        emit Withdraw(msg.sender, amount);
+    }
+
+    function claim() public {
+        UserInfo storage user = userInfo[msg.sender];
+        optimize(msg.sender);
+        update();
+        (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
+            msg.sender
+        );
+        //send pending amount
+        rewardToken1.transfer(treasury, (pendingReward1 * 10) / 100);
+        rewardToken2.transfer(treasury, (pendingReward2 * 10) / 100);
+        pendingReward1 = pendingReward1 - (pendingReward1 * 10) / 100;
+        pendingReward2 = pendingReward2 - (pendingReward2 * 10) / 100;
+        rewardToken1.transfer(msg.sender, pendingReward1);
+        rewardToken2.transfer(msg.sender, pendingReward2);
+
+        user.reward1Debt = (user.amount * accReward1PerShare) / 1e12;
+        user.reward2Debt = (user.amount * accReward2PerShare) / 1e12;
+        emit Claim(msg.sender, pendingReward1, pendingReward2);
     }
 
     function getFundInfo(address _user) public view returns (uint256, uint256) {
@@ -145,53 +227,13 @@ contract FarmingYield is Ownable {
         return (lockedAmount, user.amount - lockedAmount);
     }
 
-    function withdraw(uint256 amount) public {
-        require(amount > 0, "Amount must be greater than 0");
-        UserInfo storage user = userInfo[msg.sender];
-        (, uint withdrawableAmount) = getFundInfo(msg.sender);
-        require(
-            amount <= withdrawableAmount,
-            "Amount must be less than withdrawable amount"
+    function pendingReward(
+        address _user
+    ) public view returns (uint256, uint256) {
+        UserInfo storage user = userInfo[_user];
+        return (
+            (user.amount * accReward1PerShare) / 1e12 - user.reward1Debt,
+            (user.amount * accReward2PerShare) / 1e12 - user.reward2Debt
         );
-        update();
-        (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
-            msg.sender
-        );
-        rewardToken1.transfer(treasury, pendingReward1.mul(10).div(100));
-        rewardToken2.transfer(treasury, pendingReward2.mul(10).div(100));
-
-        rewardToken1.transfer(
-            msg.sender,
-            pendingReward1.sub(pendingReward1.mul(10).div(100))
-        );
-        rewardToken2.transfer(
-            msg.sender,
-            pendingReward2.sub(pendingReward2.mul(10).div(100))
-        );
-
-        user.amount = user.amount.sub(amount);
-        user.reward1Debt = user.amount.mul(accReward1PerShare).div(1e12);
-        user.reward2Debt = user.amount.mul(accReward2PerShare).div(1e12);
-        stakingToken.transfer(msg.sender, amount);
-        emit Withdraw(msg.sender, amount);
-    }
-
-    function claim() public {
-        UserInfo storage user = userInfo[msg.sender];
-        update();
-        (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
-            msg.sender
-        );
-        //send pending amount
-        rewardToken1.transfer(treasury, pendingReward1.mul(10).div(100));
-        rewardToken2.transfer(treasury, pendingReward2.mul(10).div(100));
-        pendingReward1 = pendingReward1.sub(pendingReward1.mul(10).div(100));
-        pendingReward2 = pendingReward2.sub(pendingReward2.mul(10).div(100));
-        rewardToken1.transfer(msg.sender, pendingReward1);
-        rewardToken2.transfer(msg.sender, pendingReward2);
-
-        user.reward1Debt = user.amount.mul(accReward1PerShare).div(1e12);
-        user.reward2Debt = user.amount.mul(accReward2PerShare).div(1e12);
-        emit Claim(msg.sender, pendingReward1, pendingReward2);
     }
 }

@@ -93,14 +93,31 @@ describe("FarmingYield", () => {
     });
   });
 
-
   describe("Withdraw", () => {
+ /*   beforeEach(async () => {
+      // Mint some staking tokens for addr1 and deposit them
+      await stakingToken.connect(owner).mint(await addr1.getAddress(), 112);
+      await stakingToken.connect(addr1).approve(FarmingYield.address, 112);
+      await FarmingYield.connect(addr1).deposit(101);
+    });
+    it("Withdraw amount should be less than withdrawable amount", async () => {
+      await ethers.provider.send("evm_increaseTime", [1 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+      await FarmingYield.connect(addr1).deposit(11);
+      // Withdraw staking tokens
+      await FarmingYield.connect(addr1).withdraw(100);
+      await expect(FarmingYield.connect(addr1).withdraw(10)).to.be.revertedWith("Amount must be less than withdrawable amount");
+    });
+*/
     beforeEach(async () => {
       // Mint some staking tokens for addr1 and deposit them
-      await stakingToken.connect(owner).mint(await addr1.getAddress(), 2020);
-      await stakingToken.connect(addr1).approve(FarmingYield.address, 2020);
+      await stakingToken.connect(owner).mint(await addr1.getAddress(), 4040);
+      await stakingToken.connect(addr1).approve(FarmingYield.address, 4040);
+      await stakingToken.connect(owner).mint(await addr2.getAddress(), 2040);
+      await stakingToken.connect(addr2).approve(FarmingYield.address, 2040);
       await FarmingYield.connect(addr1).deposit(1010);
     });
+  
     it("Deposit amount should be greater than 0", async() => {
       await expect(FarmingYield.connect(addr1).withdraw(0)).to.be.revertedWith("Amount must be greater than 0");
     });
@@ -115,6 +132,69 @@ describe("FarmingYield", () => {
       await expect(FarmingYield.connect(addr1).withdraw(1500)).to.be.revertedWith("Amount must be less than withdrawable amount");
     });
 
+    it("test optimization of deposit log", async () => {
+
+      await FarmingYield.connect(addr1).deposit(101);
+      await FarmingYield.connect(addr1).deposit(101);
+      await expect (await rewardToken1.balanceOf(await addr1.getAddress())).to.be.equal(ethers.BigNumber.from("1800")); // ({blockpass = 2}*1000)*90/100
+
+      await ethers.provider.send("evm_increaseTime", [10 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+      await FarmingYield.connect(addr1).deposit(101);
+      await FarmingYield.connect(addr1).deposit(101);
+      await expect (await rewardToken1.balanceOf(await addr1.getAddress())).to.be.equal(ethers.BigNumber.from("4500")); // 1800 + ({blockpass = 3}*1000)*90/100
+      await ethers.provider.send("evm_increaseTime", [10 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+      await FarmingYield.connect(addr1).deposit(101);
+      await FarmingYield.connect(addr1).deposit(101);
+      await expect (await rewardToken1.balanceOf(await addr1.getAddress())).to.be.equal(ethers.BigNumber.from("7200")); // 4500 + ({blockpass = 3}*1000)*90/100
+      await ethers.provider.send("evm_increaseTime", [10 * 24 * 60 * 60]);
+      await FarmingYield.connect(addr1).withdraw(1200);
+      await ethers.provider.send("evm_mine",[]);
+      await FarmingYield.connect(addr1).deposit(101);
+      await FarmingYield.connect(addr1).deposit(101);
+      await expect (await rewardToken1.balanceOf(await addr1.getAddress())).to.be.equal(ethers.BigNumber.from("10800")); // 7200 + ({blockpass = 4}*1000)*90/100
+
+      await FarmingYield.connect(addr2).deposit(1010); 
+
+      await ethers.provider.send("evm_increaseTime", [10 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+      const userInfo = await FarmingYield.userInfo(await addr1.getAddress());
+       expect(userInfo.amount).to.equal(600); // 1800 - 1200
+       await expect (await stakingToken.balanceOf(FarmingYield.address)).to.be.equal(ethers.BigNumber.from("1600")); //addr->600  addr->1000
+      await FarmingYield.connect(addr1).deposit(101);
+
+      await expect (await rewardToken1.balanceOf(await addr1.getAddress())).to.be.equal(ethers.BigNumber.from("12375")); // 10800 + (1000*1 + 2000*600/1600)*90/100
+      await ethers.provider.send("evm_increaseTime", [10 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+      await FarmingYield.connect(addr1).deposit(101);
+      
+      await FarmingYield.connect(addr1).withdraw(400);
+      await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+      await FarmingYield.connect(addr1).withdraw(400);
+      await FarmingYield.connect(addr1).deposit(505);
+      await FarmingYield.connect(addr1).deposit(505);
+      await ethers.provider.send("evm_increaseTime", [15 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+      await FarmingYield.connect(addr1).deposit(505);
+      await FarmingYield.connect(addr1).deposit(505);
+      await ethers.provider.send("evm_increaseTime", [15 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+      await FarmingYield.connect(addr1).withdraw(1000);
+    });
+
+    it("multi stakers", async () => {
+      await FarmingYield.connect(addr2).deposit(1010);
+      await ethers.provider.send("evm_increaseTime", [10 * 24 * 60 * 60]);
+      await ethers.provider.send("evm_mine",[]);
+ //     await ethers.provider.send("evm_mine",[]);
+ //     await ethers.provider.send("evm_mine",[]);
+      await FarmingYield.connect(addr1).deposit(101);
+      await expect (await rewardToken1.balanceOf(await addr1.getAddress())).to.be.equal(ethers.BigNumber.from("1800")); // 900 + 450*2 
+    });
+
+    
     it("Should withdraw staking tokens after lock period", async () => {
       await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60]);
       await ethers.provider.send("evm_mine",[]);
@@ -153,8 +233,6 @@ describe("FarmingYield", () => {
         .to.emit(FarmingYield, "Withdraw")
         .withArgs(await addr1.getAddress(), 500);
     });
-  
-    // Add more tests for withdraw here
   });
   
   describe("Claim", () => {
