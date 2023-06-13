@@ -276,10 +276,7 @@
 231
 232
 233
-234
-235
-236</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+234</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -349,14 +346,13 @@
 <span class="cline-any cline-yes">39×</span>
 <span class="cline-any cline-yes">39×</span>
 <span class="cline-any cline-yes">39×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">40×</span>
 <span class="cline-any cline-yes">40×</span>
 <span class="cline-any cline-yes">40×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">40×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18×</span>
 <span class="cline-any cline-yes">18×</span>
 <span class="cline-any cline-yes">42×</span>
@@ -371,15 +367,15 @@
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9×</span>
-<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">39×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">39×</span>
@@ -393,7 +389,13 @@
 <span class="cline-any cline-yes">29×</span>
 <span class="cline-any cline-yes">29×</span>
 <span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">29×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -430,7 +432,6 @@
 <span class="cline-any cline-yes">30×</span>
 <span class="cline-any cline-yes">30×</span>
 <span class="cline-any cline-yes">30×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">30×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -438,9 +439,7 @@
 <span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">8×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -510,9 +509,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 &nbsp;
@@ -521,7 +517,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "hardhat/console.sol";
 import "./ERC20Mock.sol";
-&nbsp;
 &nbsp;
 contract FarmingYield is Ownable {
     using SafeMath for uint256;
@@ -585,17 +580,16 @@ contract FarmingYield is Ownable {
         accReward1PerShare = 0;
         lockPeriod = _lockPeriod;
     }
-    function optimize( address _user) public {
+&nbsp;
+    function optimize(address _user) public {
         UserInfo storage user = userInfo[_user];
         uint256 unlockedAmount = 0;
         uint256 lockIndex = user.fundInfo.length;
-        
         if (lockIndex &lt;= 1) return;
-        
         uint256 i;
         for (i = 0; i &lt; user.fundInfo.length; i++) {
             uint256 elapsedTime = block.timestamp - user.fundInfo[i].timestamps;
-            if (elapsedTime &lt; lockPeriod){
+            if (elapsedTime &lt; lockPeriod) {
                 lockIndex = i;
                 break;
             } else {
@@ -606,14 +600,14 @@ contract FarmingYield is Ownable {
         user.fundInfo[0].amount = unlockedAmount;
         uint256 length = user.fundInfo.length;
         for (i = length - 1; i &gt;= lockIndex; i--) {
-       //     console.log(user.fundInfo.length, lockIndex, i-lockIndex+1, i);
-            user.fundInfo[i-lockIndex+1].amount = user.fundInfo[i].amount;
-            user.fundInfo[i-lockIndex+1].timestamps = user.fundInfo[i].timestamps;
+            user.fundInfo[i - lockIndex + 1].amount = user.fundInfo[i].amount;
+            user.fundInfo[i - lockIndex + 1].timestamps = user
+                .fundInfo[i]
+                .timestamps;
         }
         for (i = 1; i &lt; lockIndex; i++) user.fundInfo.pop();
-        
-       
     }
+&nbsp;
     function update() public {
         uint256 stakingSupply = stakingToken.balanceOf(address(this));
 &nbsp;
@@ -627,8 +621,14 @@ contract FarmingYield is Ownable {
 &nbsp;
         rewardToken1.mint(address(this), reward1);
         rewardToken2.mint(address(this), reward2);
-        accReward1PerShare = accReward1PerShare + reward1 * 1e12 / stakingSupply;
-        accReward2PerShare = accReward2PerShare + reward2 * 1e12 / stakingSupply;
+        accReward1PerShare =
+            accReward1PerShare +
+            (reward1 * 1e12) /
+            stakingSupply;
+        accReward2PerShare =
+            accReward2PerShare +
+            (reward2 * 1e12) /
+            stakingSupply;
         lastRewardBlock = block.number;
     }
 &nbsp;
@@ -636,22 +636,22 @@ contract FarmingYield is Ownable {
         require(amount &gt; 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
         optimize(msg.sender);
-        
+&nbsp;
         update();
-        
+&nbsp;
         if (user.amount &gt; 0) {
             (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
                 msg.sender
             );
-            rewardToken1.transfer(treasury, pendingReward1 * 10 / 100);
-            rewardToken2.transfer(treasury, pendingReward2 * 10 / 100);
+            rewardToken1.transfer(treasury, (pendingReward1 * 10) / 100);
+            rewardToken2.transfer(treasury, (pendingReward2 * 10) / 100);
             rewardToken1.transfer(
                 msg.sender,
-                pendingReward1 - pendingReward1 * 10 / 100
+                pendingReward1 - (pendingReward1 * 10) / 100
             );
             rewardToken2.transfer(
                 msg.sender,
-                pendingReward2 - pendingReward2 * 10 / 100
+                pendingReward2 - (pendingReward2 * 10) / 100
             );
         }
 &nbsp;
@@ -662,10 +662,9 @@ contract FarmingYield is Ownable {
         stakingToken.transfer(treasury, fee);
 &nbsp;
         user.amount = user.amount + netAmount;
-        user.reward1Debt = user.amount * accReward1PerShare / 1e12;
-        user.reward2Debt = user.amount * accReward2PerShare / 1e12;
+        user.reward1Debt = (user.amount * accReward1PerShare) / 1e12;
+        user.reward2Debt = (user.amount * accReward2PerShare) / 1e12;
         user.fundInfo.push(FundInfo(netAmount, block.timestamp));
-        //console.log(user.fundInfo[0].amount, user.fundInfo.length);
         emit Deposit(msg.sender, netAmount);
     }
 &nbsp;
@@ -673,32 +672,30 @@ contract FarmingYield is Ownable {
         require(amount &gt; 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
         optimize(msg.sender);
-        //console.log(user.fundInfo[0].amount, user.fundInfo.length);
         (, uint withdrawableAmount) = getFundInfo(msg.sender);
-        //console.log("withdraw ", withdrawableAmount);
         require(
             amount &lt;= withdrawableAmount,
             "Amount must be less than withdrawable amount"
         );
-        
+&nbsp;
         update();
         (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
             msg.sender
         );
-        rewardToken1.transfer(treasury, pendingReward1 * 10 / 100);
-        rewardToken2.transfer(treasury, pendingReward2 * 10 / 100);
+        rewardToken1.transfer(treasury, (pendingReward1 * 10) / 100);
+        rewardToken2.transfer(treasury, (pendingReward2 * 10) / 100);
         rewardToken1.transfer(
             msg.sender,
-            pendingReward1 - pendingReward1 * 10 / 100
+            pendingReward1 - (pendingReward1 * 10) / 100
         );
         rewardToken2.transfer(
             msg.sender,
-            pendingReward2 - pendingReward2 * 10 / 100
+            pendingReward2 - (pendingReward2 * 10) / 100
         );
 &nbsp;
         user.amount = user.amount - amount;
-        user.reward1Debt = user.amount * accReward1PerShare / 1e12;
-        user.reward2Debt = user.amount * accReward2PerShare / 1e12;
+        user.reward1Debt = (user.amount * accReward1PerShare) / 1e12;
+        user.reward2Debt = (user.amount * accReward2PerShare) / 1e12;
         stakingToken.transfer(msg.sender, amount);
         user.fundInfo[0].amount -= amount;
         emit Withdraw(msg.sender, amount);
@@ -712,15 +709,15 @@ contract FarmingYield is Ownable {
             msg.sender
         );
         //send pending amount
-        rewardToken1.transfer(treasury, pendingReward1 * 10 / 100);
-        rewardToken2.transfer(treasury, pendingReward2 * 10 / 100);
-        pendingReward1 = pendingReward1 - pendingReward1 * 10 / 100;
-        pendingReward2 = pendingReward2 - pendingReward2 * 10 / 100;
+        rewardToken1.transfer(treasury, (pendingReward1 * 10) / 100);
+        rewardToken2.transfer(treasury, (pendingReward2 * 10) / 100);
+        pendingReward1 = pendingReward1 - (pendingReward1 * 10) / 100;
+        pendingReward2 = pendingReward2 - (pendingReward2 * 10) / 100;
         rewardToken1.transfer(msg.sender, pendingReward1);
         rewardToken2.transfer(msg.sender, pendingReward2);
 &nbsp;
-        user.reward1Debt = user.amount * accReward1PerShare / 1e12;
-        user.reward2Debt = user.amount * accReward2PerShare / 1e12;
+        user.reward1Debt = (user.amount * accReward1PerShare) / 1e12;
+        user.reward2Debt = (user.amount * accReward2PerShare) / 1e12;
         emit Claim(msg.sender, pendingReward1, pendingReward2);
     }
 &nbsp;
@@ -740,13 +737,10 @@ contract FarmingYield is Ownable {
     ) public view returns (uint256, uint256) {
         UserInfo storage user = userInfo[_user];
         return (
-            user.amount * accReward1PerShare / 1e12 - user.reward1Debt,
-            user.amount * accReward2PerShare / 1e12 - user.reward2Debt
+            (user.amount * accReward1PerShare) / 1e12 - user.reward1Debt,
+            (user.amount * accReward2PerShare) / 1e12 - user.reward2Debt
         );
     }
-&nbsp;
-&nbsp;
-&nbsp;
 }
 &nbsp;</pre></td></tr>
 </table></pre>
@@ -754,7 +748,7 @@ contract FarmingYield is Ownable {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jun 13 2023 20:46:36 GMT+1000 (Vladivostok Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jun 13 2023 20:50:56 GMT+1000 (Vladivostok Standard Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

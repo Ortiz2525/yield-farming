@@ -74,9 +74,7 @@ contract FarmingYield is Ownable {
         UserInfo storage user = userInfo[_user];
         uint256 unlockedAmount = 0;
         uint256 lockIndex = user.fundInfo.length;
-
         if (lockIndex <= 1) return;
-
         uint256 i;
         for (i = 0; i < user.fundInfo.length; i++) {
             uint256 elapsedTime = block.timestamp - user.fundInfo[i].timestamps;
@@ -91,7 +89,6 @@ contract FarmingYield is Ownable {
         user.fundInfo[0].amount = unlockedAmount;
         uint256 length = user.fundInfo.length;
         for (i = length - 1; i >= lockIndex; i--) {
-            //     console.log(user.fundInfo.length, lockIndex, i-lockIndex+1, i);
             user.fundInfo[i - lockIndex + 1].amount = user.fundInfo[i].amount;
             user.fundInfo[i - lockIndex + 1].timestamps = user
                 .fundInfo[i]
@@ -157,7 +154,6 @@ contract FarmingYield is Ownable {
         user.reward1Debt = (user.amount * accReward1PerShare) / 1e12;
         user.reward2Debt = (user.amount * accReward2PerShare) / 1e12;
         user.fundInfo.push(FundInfo(netAmount, block.timestamp));
-        //console.log(user.fundInfo[0].amount, user.fundInfo.length);
         emit Deposit(msg.sender, netAmount);
     }
 
@@ -165,9 +161,7 @@ contract FarmingYield is Ownable {
         require(amount > 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
         optimize(msg.sender);
-        //console.log(user.fundInfo[0].amount, user.fundInfo.length);
         (, uint withdrawableAmount) = getFundInfo(msg.sender);
-        //console.log("withdraw ", withdrawableAmount);
         require(
             amount <= withdrawableAmount,
             "Amount must be less than withdrawable amount"
