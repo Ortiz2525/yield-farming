@@ -254,39 +254,8 @@
 209
 210
 211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
-230
-231
-232
-233
-234
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+212</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -358,33 +327,6 @@
 <span class="cline-any cline-yes">39×</span>
 <span class="cline-any cline-yes">39×</span>
 <span class="cline-any cline-yes">39×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -414,8 +356,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">31×</span>
 <span class="cline-any cline-yes">30×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">30×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">30×</span>
@@ -450,7 +390,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-yes">8×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -474,18 +413,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-yes">7×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-yes">7×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -537,6 +473,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "hardhat/console.sol";
 import "./ERC20Mock.sol";
+&nbsp;
 &nbsp;
 contract FarmingYield is Ownable {
     using SafeMath for uint256;
@@ -603,33 +540,6 @@ contract FarmingYield is Ownable {
         lockPeriod = _lockPeriod;
     }
 &nbsp;
-    // function optimize(address _user) public {
-    //     UserInfo storage user = userInfo[_user];
-    //     uint256 unlockedAmount = 0;
-    //     uint256 lockIndex = user.fundInfo.length;
-    //     if (lockIndex &lt;= 1) return;
-    //     uint256 i;
-    //     for (i = 0; i &lt; user.fundInfo.length; i++) {
-    //         uint256 elapsedTime = block.timestamp - user.fundInfo[i].timestamps;
-    //         if (elapsedTime &lt; lockPeriod) {
-    //             lockIndex = i;
-    //             break;
-    //         } else {
-    //             unlockedAmount += user.fundInfo[i].amount;
-    //         }
-    //     }
-    //     if (lockIndex &lt;= 1) return;
-    //     user.fundInfo[0].amount = unlockedAmount;
-    //     uint256 length = user.fundInfo.length;
-    //     for (i = length - 1; i &gt;= lockIndex; i--) {
-    //         user.fundInfo[i - lockIndex + 1].amount = user.fundInfo[i].amount;
-    //         user.fundInfo[i - lockIndex + 1].timestamps = user
-    //             .fundInfo[i]
-    //             .timestamps;
-    //     }
-    //     for (i = 1; i &lt; lockIndex; i++) user.fundInfo.pop();
-    // }
-&nbsp;
     function update() public {
         uint256 stakingSupply = stakingToken.balanceOf(address(this));
 &nbsp;
@@ -657,8 +567,6 @@ contract FarmingYield is Ownable {
     function deposit(uint256 amount) public {
         require(amount &gt; 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
-    //    optimize(msg.sender);
-    //    if (user.fundInfo.length == 0) unLockAmount[msg.sender] = 0;
         update();
 &nbsp;
         if (user.amount &gt; 0) {
@@ -693,7 +601,6 @@ contract FarmingYield is Ownable {
     function withdraw(uint256 amount) public {
         require(amount &gt; 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
-    //    optimize(msg.sender);
         (, uint withdrawableAmount) = getFundInfo(msg.sender);
         require(
             amount &lt;= withdrawableAmount,
@@ -717,18 +624,15 @@ contract FarmingYield is Ownable {
 &nbsp;
         user.amount = user.amount - amount;
         user.unLockAmount -= amount;
-//        console.log("withdraw", user.amount, user.unLockAmount);
         user.reward1Debt = (user.amount * accReward1PerShare) / 1e12;
         user.reward2Debt = (user.amount * accReward2PerShare) / 1e12;
         stakingToken.transfer(msg.sender, amount);
-        //user.fundInfo[0].amount -= amount;
         
         emit Withdraw(msg.sender, amount);
     }
 &nbsp;
     function claim() public {
         UserInfo storage user = userInfo[msg.sender];
-    //    optimize(msg.sender);
         update();
         (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
             msg.sender
@@ -778,7 +682,7 @@ contract FarmingYield is Ownable {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Jun 14 2023 00:15:08 GMT+1000 (Vladivostok Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Jun 14 2023 00:18:12 GMT+1000 (Vladivostok Standard Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

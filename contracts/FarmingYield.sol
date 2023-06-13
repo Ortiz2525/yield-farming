@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "hardhat/console.sol";
 import "./ERC20Mock.sol";
 
+
 contract FarmingYield is Ownable {
     using SafeMath for uint256;
     // token addresses
@@ -72,33 +73,6 @@ contract FarmingYield is Ownable {
         lockPeriod = _lockPeriod;
     }
 
-    // function optimize(address _user) public {
-    //     UserInfo storage user = userInfo[_user];
-    //     uint256 unlockedAmount = 0;
-    //     uint256 lockIndex = user.fundInfo.length;
-    //     if (lockIndex <= 1) return;
-    //     uint256 i;
-    //     for (i = 0; i < user.fundInfo.length; i++) {
-    //         uint256 elapsedTime = block.timestamp - user.fundInfo[i].timestamps;
-    //         if (elapsedTime < lockPeriod) {
-    //             lockIndex = i;
-    //             break;
-    //         } else {
-    //             unlockedAmount += user.fundInfo[i].amount;
-    //         }
-    //     }
-    //     if (lockIndex <= 1) return;
-    //     user.fundInfo[0].amount = unlockedAmount;
-    //     uint256 length = user.fundInfo.length;
-    //     for (i = length - 1; i >= lockIndex; i--) {
-    //         user.fundInfo[i - lockIndex + 1].amount = user.fundInfo[i].amount;
-    //         user.fundInfo[i - lockIndex + 1].timestamps = user
-    //             .fundInfo[i]
-    //             .timestamps;
-    //     }
-    //     for (i = 1; i < lockIndex; i++) user.fundInfo.pop();
-    // }
-
     function update() public {
         uint256 stakingSupply = stakingToken.balanceOf(address(this));
 
@@ -126,8 +100,6 @@ contract FarmingYield is Ownable {
     function deposit(uint256 amount) public {
         require(amount > 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
-    //    optimize(msg.sender);
-    //    if (user.fundInfo.length == 0) unLockAmount[msg.sender] = 0;
         update();
 
         if (user.amount > 0) {
@@ -162,7 +134,6 @@ contract FarmingYield is Ownable {
     function withdraw(uint256 amount) public {
         require(amount > 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
-    //    optimize(msg.sender);
         (, uint withdrawableAmount) = getFundInfo(msg.sender);
         require(
             amount <= withdrawableAmount,
@@ -186,18 +157,15 @@ contract FarmingYield is Ownable {
 
         user.amount = user.amount - amount;
         user.unLockAmount -= amount;
-//        console.log("withdraw", user.amount, user.unLockAmount);
         user.reward1Debt = (user.amount * accReward1PerShare) / 1e12;
         user.reward2Debt = (user.amount * accReward2PerShare) / 1e12;
         stakingToken.transfer(msg.sender, amount);
-        //user.fundInfo[0].amount -= amount;
         
         emit Withdraw(msg.sender, amount);
     }
 
     function claim() public {
         UserInfo storage user = userInfo[msg.sender];
-    //    optimize(msg.sender);
         update();
         (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
             msg.sender
