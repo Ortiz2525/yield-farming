@@ -37,6 +37,7 @@ contract FarmingYield is Ownable {
 
     struct UserInfo {
         uint256 amount; // How many staking tokens the user has provided.
+        uint256 unLockAmount;
         // Reward debt.
         uint256 reward1Debt;
         uint256 reward2Debt;
@@ -44,6 +45,7 @@ contract FarmingYield is Ownable {
     }
 
     mapping(address => UserInfo) public userInfo;
+    mapping(address => uint256) public lockIndex;
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
     event Claim(address indexed user, uint256 amount1, uint256 amount2);
@@ -70,32 +72,32 @@ contract FarmingYield is Ownable {
         lockPeriod = _lockPeriod;
     }
 
-    function optimize(address _user) public {
-        UserInfo storage user = userInfo[_user];
-        uint256 unlockedAmount = 0;
-        uint256 lockIndex = user.fundInfo.length;
-        if (lockIndex <= 1) return;
-        uint256 i;
-        for (i = 0; i < user.fundInfo.length; i++) {
-            uint256 elapsedTime = block.timestamp - user.fundInfo[i].timestamps;
-            if (elapsedTime < lockPeriod) {
-                lockIndex = i;
-                break;
-            } else {
-                unlockedAmount += user.fundInfo[i].amount;
-            }
-        }
-        if (lockIndex <= 1) return;
-        user.fundInfo[0].amount = unlockedAmount;
-        uint256 length = user.fundInfo.length;
-        for (i = length - 1; i >= lockIndex; i--) {
-            user.fundInfo[i - lockIndex + 1].amount = user.fundInfo[i].amount;
-            user.fundInfo[i - lockIndex + 1].timestamps = user
-                .fundInfo[i]
-                .timestamps;
-        }
-        for (i = 1; i < lockIndex; i++) user.fundInfo.pop();
-    }
+    // function optimize(address _user) public {
+    //     UserInfo storage user = userInfo[_user];
+    //     uint256 unlockedAmount = 0;
+    //     uint256 lockIndex = user.fundInfo.length;
+    //     if (lockIndex <= 1) return;
+    //     uint256 i;
+    //     for (i = 0; i < user.fundInfo.length; i++) {
+    //         uint256 elapsedTime = block.timestamp - user.fundInfo[i].timestamps;
+    //         if (elapsedTime < lockPeriod) {
+    //             lockIndex = i;
+    //             break;
+    //         } else {
+    //             unlockedAmount += user.fundInfo[i].amount;
+    //         }
+    //     }
+    //     if (lockIndex <= 1) return;
+    //     user.fundInfo[0].amount = unlockedAmount;
+    //     uint256 length = user.fundInfo.length;
+    //     for (i = length - 1; i >= lockIndex; i--) {
+    //         user.fundInfo[i - lockIndex + 1].amount = user.fundInfo[i].amount;
+    //         user.fundInfo[i - lockIndex + 1].timestamps = user
+    //             .fundInfo[i]
+    //             .timestamps;
+    //     }
+    //     for (i = 1; i < lockIndex; i++) user.fundInfo.pop();
+    // }
 
     function update() public {
         uint256 stakingSupply = stakingToken.balanceOf(address(this));
@@ -124,8 +126,8 @@ contract FarmingYield is Ownable {
     function deposit(uint256 amount) public {
         require(amount > 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
-        optimize(msg.sender);
-
+    //    optimize(msg.sender);
+    //    if (user.fundInfo.length == 0) unLockAmount[msg.sender] = 0;
         update();
 
         if (user.amount > 0) {
@@ -160,7 +162,7 @@ contract FarmingYield is Ownable {
     function withdraw(uint256 amount) public {
         require(amount > 0, "Amount must be greater than 0");
         UserInfo storage user = userInfo[msg.sender];
-        optimize(msg.sender);
+    //    optimize(msg.sender);
         (, uint withdrawableAmount) = getFundInfo(msg.sender);
         require(
             amount <= withdrawableAmount,
@@ -183,16 +185,19 @@ contract FarmingYield is Ownable {
         );
 
         user.amount = user.amount - amount;
+        user.unLockAmount -= amount;
+//        console.log("withdraw", user.amount, user.unLockAmount);
         user.reward1Debt = (user.amount * accReward1PerShare) / 1e12;
         user.reward2Debt = (user.amount * accReward2PerShare) / 1e12;
         stakingToken.transfer(msg.sender, amount);
-        user.fundInfo[0].amount -= amount;
+        //user.fundInfo[0].amount -= amount;
+        
         emit Withdraw(msg.sender, amount);
     }
 
     function claim() public {
         UserInfo storage user = userInfo[msg.sender];
-        optimize(msg.sender);
+    //    optimize(msg.sender);
         update();
         (uint256 pendingReward1, uint256 pendingReward2) = pendingReward(
             msg.sender
@@ -210,15 +215,20 @@ contract FarmingYield is Ownable {
         emit Claim(msg.sender, pendingReward1, pendingReward2);
     }
 
-    function getFundInfo(address _user) public view returns (uint256, uint256) {
+    function getFundInfo(address _user) public returns (uint256, uint256) {
         UserInfo storage user = userInfo[_user];
-        uint256 lockedAmount = 0;
-        for (uint256 i = 0; i < user.fundInfo.length; i++) {
+        uint256 i;
+        for (i = lockIndex[_user]; i < user.fundInfo.length; i++) {
             uint256 elapsedTime = block.timestamp - user.fundInfo[i].timestamps;
-            if (elapsedTime < lockPeriod)
-                lockedAmount += user.fundInfo[i].amount;
+            if (elapsedTime >= lockPeriod)
+                user.unLockAmount += user.fundInfo[i].amount;
+            else {
+                lockIndex[_user] = i;
+                break;
+            }
         }
-        return (lockedAmount, user.amount - lockedAmount);
+        if (i == user.fundInfo.length) lockIndex[_user] = i;
+        return (user.amount - user.unLockAmount, user.unLockAmount);
     }
 
     function pendingReward(

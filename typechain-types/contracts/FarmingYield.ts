@@ -36,8 +36,8 @@ export interface FarmingYieldInterface extends utils.Interface {
     "depositFee()": FunctionFragment;
     "getFundInfo(address)": FunctionFragment;
     "lastRewardBlock()": FunctionFragment;
+    "lockIndex(address)": FunctionFragment;
     "lockPeriod()": FunctionFragment;
-    "optimize(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "pendingReward(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -63,8 +63,8 @@ export interface FarmingYieldInterface extends utils.Interface {
       | "depositFee"
       | "getFundInfo"
       | "lastRewardBlock"
+      | "lockIndex"
       | "lockPeriod"
-      | "optimize"
       | "owner"
       | "pendingReward"
       | "renounceOwnership"
@@ -107,12 +107,12 @@ export interface FarmingYieldInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "lockPeriod",
-    values?: undefined
+    functionFragment: "lockIndex",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "optimize",
-    values: [PromiseOrValue<string>]
+    functionFragment: "lockPeriod",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -181,8 +181,8 @@ export interface FarmingYieldInterface extends utils.Interface {
     functionFragment: "lastRewardBlock",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "lockIndex", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "lockPeriod", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "optimize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "pendingReward",
@@ -325,17 +325,17 @@ export interface FarmingYield extends BaseContract {
 
     getFundInfo(
       _user: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber]>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     lastRewardBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    lockPeriod(overrides?: CallOverrides): Promise<[BigNumber]>;
+    lockIndex(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-    optimize(
-      _user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    lockPeriod(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -375,8 +375,9 @@ export interface FarmingYield extends BaseContract {
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
         amount: BigNumber;
+        unLockAmount: BigNumber;
         reward1Debt: BigNumber;
         reward2Debt: BigNumber;
       }
@@ -405,17 +406,17 @@ export interface FarmingYield extends BaseContract {
 
   getFundInfo(
     _user: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber]>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
-  lockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
+  lockIndex(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
-  optimize(
-    _user: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  lockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -455,8 +456,9 @@ export interface FarmingYield extends BaseContract {
     arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
       amount: BigNumber;
+      unLockAmount: BigNumber;
       reward1Debt: BigNumber;
       reward2Debt: BigNumber;
     }
@@ -488,12 +490,12 @@ export interface FarmingYield extends BaseContract {
 
     lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
-    lockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
-
-    optimize(
-      _user: PromiseOrValue<string>,
+    lockIndex(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
+
+    lockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -529,8 +531,9 @@ export interface FarmingYield extends BaseContract {
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
         amount: BigNumber;
+        unLockAmount: BigNumber;
         reward1Debt: BigNumber;
         reward2Debt: BigNumber;
       }
@@ -600,17 +603,17 @@ export interface FarmingYield extends BaseContract {
 
     getFundInfo(
       _user: PromiseOrValue<string>,
-      overrides?: CallOverrides
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
-    lockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
-
-    optimize(
-      _user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    lockIndex(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    lockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -679,17 +682,17 @@ export interface FarmingYield extends BaseContract {
 
     getFundInfo(
       _user: PromiseOrValue<string>,
-      overrides?: CallOverrides
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     lastRewardBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lockPeriod(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    optimize(
-      _user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    lockIndex(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    lockPeriod(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
